@@ -91,14 +91,17 @@ class TestUser(unittest.TestCase):
         user = User.query.filter_by(id=3).first()
         self.assertEqual(user.name, "Amy")
 
-    def test_put_User_without_name(self):
+    def test_put_User(self):
         # send the request and check the response status code
-        response = self.app.put("/user/1")
-        self.assertEqual(response.status_code, 400)
+        response = self.app.put("/user/1", data={"name": "Numericable"})
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.get("/user/1")
+        self.assertEqual(response.status_code, 200)
 
         # convert the response data from json and call the asserts
-        body = json.loads(str(response.data, "utf8"))
-        self.assertDictEqual(body, {"code": 400, "msg": "missing name"})
+        User = json.loads(str(response.data, "utf8"))
+        self.assertDictEqual(User, {"id": "1", "name": "Numericable"})
 
     def test_put_User_with_wrong_id(self):
         # send the request and check the response status code

@@ -46,10 +46,8 @@ def get_vote_for_user(user_id):
 def update_vote(post_id, user_id):
     vote = Vote.query.filter_by(post_id=post_id, user_id=user_id).first()
     if vote:
-        try:
+        if 'value' in request.form:
             vote.value = request.form['value']
-        except BadRequestKeyError:
-            return make_response(jsonify({"code": 400, "msg": "missing value"}), 400)
         try:
             db.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as e:

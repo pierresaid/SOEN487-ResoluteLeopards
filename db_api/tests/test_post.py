@@ -10,12 +10,11 @@ tested_app.config.from_object(TestConfig)
 
 class TestPost(unittest.TestCase):
     def setUp(self):
-
         # set up the test DB
         self.db = tested_db
         self.db.create_all()
-        self.db.session.add(Post(id=1, title="Hello"))
-        self.db.session.add(Post(id=2, title="World"))
+        self.db.session.add(Post(id=1, title="Hello", url_one="url1", url_two="url2"))
+        self.db.session.add(Post(id=2, title="World", url_one="url1", url_two="url2"))
         self.db.session.commit()
 
         self.app = tested_app.test_client()
@@ -33,8 +32,8 @@ class TestPost(unittest.TestCase):
         # convert the response data from json and call the asserts
         Post_list = json.loads(str(response.data, "utf8"))
         self.assertEqual(type(Post_list), list)
-        self.assertDictEqual(Post_list[0], {"id": "1", "title": "Hello"})
-        self.assertDictEqual(Post_list[1], {"id": "2", "title": "World"})
+        self.assertDictEqual(Post_list[0], {"id": "1", "title": "Hello", "url_one": "url1", "url_two": "url2"})
+        self.assertDictEqual(Post_list[1], {"id": "2", "title": "World", "url_one": "url1", "url_two": "url2"})
 
     def test_get_Post_with_valid_id(self):
         # send the request and check the response status code
@@ -43,7 +42,7 @@ class TestPost(unittest.TestCase):
 
         # convert the response data from json and call the asserts
         Post = json.loads(str(response.data, "utf8"))
-        self.assertDictEqual(Post, {"id": "1", "title": "Hello"})
+        self.assertDictEqual(Post, {"id": "1", "title": "Hello", "url_one": "url1", "url_two": "url2"})
 
     def test_get_Post_with_invalid_id(self):
         # send the request and check the response status code
@@ -59,7 +58,7 @@ class TestPost(unittest.TestCase):
         initial_count = Post.query.filter_by(title="Wow").count()
 
         # send the request and check the response status code
-        response = self.app.post("/post/", data={"title": "Wow"})
+        response = self.app.post("/post/", data={"title": "Wow", "url_one": "url1", "url_two": "url2"})
         self.assertEqual(response.status_code, 200)
 
         # convert the response data from json and call the asserts
@@ -77,11 +76,11 @@ class TestPost(unittest.TestCase):
 
         # convert the response data from json and call the asserts
         body = json.loads(str(response.data, "utf8"))
-        self.assertDictEqual(body, {"code": 400, "msg": "missing title"})
+        self.assertDictEqual(body, {"code": 400, "msg": "missing parameters"})
 
     def test_post_Post_with_new_id(self):
         # send the request and check the response status code
-        response = self.app.post("/post/", data={"id": 3, "title": "Wow"})
+        response = self.app.post("/post/", data={"title": "Wow", "url_one": "url1", "url_two": "url2"})
         self.assertEqual(response.status_code, 200)
 
         # convert the response data from json and call the asserts
@@ -92,14 +91,17 @@ class TestPost(unittest.TestCase):
         post = Post.query.filter_by(id=3).first()
         self.assertEqual(post.title, "Wow")
 
-    def test_put_Post_without_title(self):
+    def test_put_Post(self):
         # send the request and check the response status code
-        response = self.app.put("/post/1")
-        self.assertEqual(response.status_code, 400)
+        response = self.app.put("/post/1", data={"title": "new titre", "url_one": "url1", "url_two": "url2"})
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.get("/post/1")
+        self.assertEqual(response.status_code, 200)
 
         # convert the response data from json and call the asserts
-        body = json.loads(str(response.data, "utf8"))
-        self.assertDictEqual(body, {"code": 400, "msg": "missing title"})
+        post = json.loads(str(response.data, "utf8"))
+        self.assertDictEqual(post, {"id" : "1", "title": "new titre", "url_one": "url1", "url_two": "url2"})
 
     def test_put_Post_with_wrong_id(self):
         # send the request and check the response status code

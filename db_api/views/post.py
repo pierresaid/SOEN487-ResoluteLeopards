@@ -28,10 +28,12 @@ def get_post(post_id):
 def update_post(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if post:
-        try:
+        if 'title' in request.form:
             post.title = request.form['title']
-        except BadRequestKeyError:
-            return make_response(jsonify({"code": 400, "msg": "missing title"}), 400)
+        if 'url_one' in request.form:
+            post.url_one = request.form['url_one']
+        if 'url_two' in request.form:
+            post.url_two = request.form['url_two']
         try:
             db.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as e:
@@ -48,9 +50,9 @@ def update_post(post_id):
 @bp.route("/", methods=['POST'])
 def add_post():
     try:
-        newPost = Post(title=request.form['title'])
+        newPost = Post(title=request.form['title'], url_one=request.form['url_one'], url_two=request.form['url_two'])
     except BadRequestKeyError:
-        return make_response(jsonify({"code": 400, "msg": "missing title"}), 400)
+        return make_response(jsonify({"code": 400, "msg": "missing parameters"}), 400)
     db.session.add(newPost)
     try:
         db.session.commit()

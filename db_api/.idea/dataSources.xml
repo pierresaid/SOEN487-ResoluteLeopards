@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="SOEN487_project" uuid="74267aa5-615c-40cc-b5ff-e49239f6e11b">
+    <data-source source="LOCAL" name="SOEN487" uuid="74267aa5-615c-40cc-b5ff-e49239f6e11b">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/SOEN487_A1.sqlite</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/SOEN487.sqlite</jdbc-url>
       <driver-properties>
         <property name="enable_load_extension" value="true" />
         <property name="foreign_keys" value="true" />

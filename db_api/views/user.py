@@ -28,10 +28,8 @@ def get_user(user_id):
 def update_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     if user:
-        try:
+        if 'name' in request.form:
             user.name = request.form['name']
-        except BadRequestKeyError:
-            return make_response(jsonify({"code": 400, "msg": "missing name"}), 400)
         try:
             db.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as e:

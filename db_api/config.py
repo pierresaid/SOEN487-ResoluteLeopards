@@ -1,5 +1,5 @@
 class Config(object):
-    SQLALCHEMY_DATABASE_URI = r"sqlite:///SOEN487_project.sqlite"
+    SQLALCHEMY_DATABASE_URI = r"sqlite:///SOEN487.sqlite"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
@@ -13,7 +13,7 @@ class DevConfig(Config):
 
 class TestConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = r"sqlite:///tests/test_SOEN487_project.sqlite"
+    SQLALCHEMY_DATABASE_URI = r"sqlite:///tests/test_SOEN487.sqlite"
 
 
 from sqlalchemy import event
