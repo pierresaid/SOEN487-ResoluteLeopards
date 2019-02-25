@@ -1,0 +1,47 @@
+swagger: "2.0"
+info:
+  description: "SOEN 487 Project's API documentation"
+  version: "1.0.0"
+  title: "SOEN 487 Project"
+basePath: "/v2"
+tags:
+- name: "Auth service"
+  description: "Authentication service routes"
+- name: "Database service"
+  description: "Database service routes"
+- name: "Image Fetch"
+  description: "Image Fetching service routes"
+- name: "Face-Off"
+  description: "Face-Off service routes"
+- name: "Stats"
+  description: "Statistics service routes"
+schemes:
+- "https"
+- "http"
+paths:
+  /dummy:
+    get:
+      tags:
+      - "Auth service"
+      summary: "This is an example"
+      description: ""
+      responses:
+        405:
+          description: "Invalid input"
+    
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      username:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+    xml:
+      name: "User"
+  
