@@ -1,47 +1,56 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
-  description: "SOEN 487 Project's API documentation"
-  version: "1.0.0"
-  title: "SOEN 487 Project"
-basePath: "/v2"
+  description: SOEN 487 Project's API documentation
+  version: 1.0.0
+  title: SOEN 487 Project
+basePath: /v2
 tags:
-- name: "Auth service"
-  description: "Authentication service routes"
-- name: "Database service"
-  description: "Database service routes"
-- name: "Image Fetch"
-  description: "Image Fetching service routes"
-- name: "Face-Off"
-  description: "Face-Off service routes"
-- name: "Stats"
-  description: "Statistics service routes"
+  - name: Auth service
+    description: Authentication service routes
+  - name: Database service
+    description: Database service routes
+  - name: Image Fetch
+    description: Image Fetching service routes
+  - name: Face-Off
+    description: Face-Off service routes
+  - name: Stats
+    description: Statistics service routes
 schemes:
-- "https"
-- "http"
+  - https
+  - http
 paths:
-  /dummy:
+  /cat:
     get:
       tags:
-      - "Auth service"
-      summary: "This is an example"
-      description: ""
+        - "Image Fetch"
+      summary: 'Get a random picture of cat'
+      description: 'Get a random picture of cat'
       responses:
-        405:
-          description: "Invalid input"
-    
+        '200':
+          description: Valid request. A cat image is returned.
+  /dog:
+    get:
+      tags:
+        - "Image Fetch"
+      summary: 'Get a random picture of dog'
+      description: 'Get a random picture of dog'
+      responses:
+        '200':
+          description: Valid request. A dog image is returned.
+  
+          
 definitions:
   User:
-    type: "object"
+    type: object
     properties:
       id:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
       username:
-        type: "string"
+        type: string
       email:
-        type: "string"
+        type: string
       password:
-        type: "string"
+        type: string
     xml:
-      name: "User"
-  
+      name: User
