@@ -21,7 +21,7 @@ def get_user(user_id):
     if user:
         return jsonify(row2dict(user))
     else:
-        return make_response(jsonify({"code": 404, "msg": "Cannot find this user."}), 404)
+        return make_response(jsonify({"code": 404, "msg": "User not found"}), 404)
 
 
 @bp.route("/<user_id>", methods=['PUT'])
@@ -40,7 +40,7 @@ def update_user(user_id):
             return make_response(jsonify({"code": 404, "msg": error}), 404)
         return jsonify({"code": 200, "msg": "success"})
     else:
-        return make_response(jsonify({"code": 404, "msg": "Cannot find this user."}), 404)
+        return make_response(jsonify({"code": 404, "msg": "User not found"}), 404)
 
 
 @bp.route("/", methods=['POST'])
@@ -72,4 +72,4 @@ def delete_user(user_id):
         except sqlalchemy.exc.IntegrityError:
             return make_response(jsonify({"code": 400, "msg": "This user has existing vote"}), 400)
     else:
-        return make_response(jsonify({"code": 404, "msg": "Cannot find this user."}), 404)
+        return make_response(jsonify({"code": 404, "msg": "User not found"}), 404)

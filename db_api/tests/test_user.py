@@ -51,7 +51,7 @@ class TestUser(unittest.TestCase):
 
         # convert the response data from json and call the asserts
         body = json.loads(str(response.data, "utf8"))
-        self.assertDictEqual(body, {"code": 404, "msg": "Cannot find this user."})
+        self.assertDictEqual(body, {"code": 404, "msg": "User not found"})
 
     def test_post_User_without_id(self):
         # send the request and check the response status code
@@ -110,7 +110,7 @@ class TestUser(unittest.TestCase):
 
         # convert the response data from json and call the asserts
         body = json.loads(str(response.data, "utf8"))
-        self.assertDictEqual(body, {"code": 404, "msg": "Cannot find this user."})
+        self.assertDictEqual(body, {"code": 404, "msg": "User not found"})
 
     def test_delete_User(self):
         initial_count = User.query.count()
@@ -136,7 +136,7 @@ class TestUser(unittest.TestCase):
 
         # convert the response data from json and call the asserts
         body = json.loads(str(response.data, "utf8"))
-        self.assertDictEqual(body, {"code": 404, "msg": "Cannot find this user."})
+        self.assertDictEqual(body, {"code": 404, "msg": "User not found"})
 
         # check if the DB was updated correctly
         updated_count = User.query.count()
