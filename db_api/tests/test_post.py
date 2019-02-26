@@ -63,7 +63,7 @@ class TestPost(unittest.TestCase):
 
         # convert the response data from json and call the asserts
         body = json.loads(str(response.data, "utf8"))
-        self.assertDictEqual(body, {"code": 200, "msg": "success"})
+        self.assertDictEqual(body, {"id" : "3", "title": "Wow", "url_one": "url1", "url_two": "url2"})
 
         # check if the DB was updated correctly
         updated_count = Post.query.filter_by(title="Wow").count()
@@ -85,7 +85,7 @@ class TestPost(unittest.TestCase):
 
         # convert the response data from json and call the asserts
         body = json.loads(str(response.data, "utf8"))
-        self.assertDictEqual(body, {"code": 200, "msg": "success"})
+        self.assertDictEqual(body, {"id" : "3", "title": "Wow", "url_one": "url1", "url_two": "url2"})
 
         # check if the DB was updated correctly
         post = Post.query.filter_by(id=3).first()
