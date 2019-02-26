@@ -42,6 +42,39 @@ paths:
             type: array
             items:
                 $ref: '#/definitions/User'
+  '/user/info/{user_mail}':
+    get:
+      tags:
+        - user
+      summary: Get user info by mail
+      description: ''
+      operationId: get_user_info_by_mail
+      produces:
+        - application/json
+      parameters:
+        - name: user_mail
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+                example: "barthelemy"
+              mail:
+                example: "bartho@google.com"
+                type: string
+              pwdhash:
+                example: "a_hashed_password"
+                type: string
+        '404':
+          description: User not found
   '/user/{user_id}':
     get:
       tags:
@@ -346,23 +379,34 @@ definitions:
         type: integer
       name:
         type: string
+        example: "barthelemy"
+      mail:
+        example: "bartho@google.com"
+        type: string
   Post:
     type: object
     properties:
       id:
         type: integer
+        example: 42
       title:
         type: string
+        example: "A cool Post title"
       url_one:
         type: string
+        example: "https://purr.objects-us-east-1.dream.io/i/2013-10-19%2016.06.51.jpg"
       url_two:
         type: string
+        example: "https://images.dog.ceo/breeds/pinscher-miniature/n02107312_46.jpg"
   Vote:
     type: object
     properties:
       user_id:
         type: integer
+        example: 1
       post_id:
         type: integer
+        example: 2
       value:
         type: integer
+        example: 1
