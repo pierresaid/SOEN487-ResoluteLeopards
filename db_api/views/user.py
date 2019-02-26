@@ -32,13 +32,14 @@ def update_user(user_id):
             user.name = request.form['name']
         try:
             db.session.commit()
+            updated_user = User.query.filter_by(id=user_id).first()
         except sqlalchemy.exc.SQLAlchemyError as e:
             error = "Cannot update user. "
             print(app.config.get("DEBUG"))
             if app.config.get("DEBUG"):
                 error += str(e)
             return make_response(jsonify({"code": 404, "msg": error}), 404)
-        return jsonify({"code": 200, "msg": "success"})
+        return jsonify(row2dict(updated_user))
     else:
         return make_response(jsonify({"code": 404, "msg": "User not found"}), 404)
 
@@ -52,13 +53,14 @@ def add_user():
     db.session.add(newUser)
     try:
         db.session.commit()
+        added_user = User.query.filter_by(id=newUser.id).first()
     except sqlalchemy.exc.SQLAlchemyError as e:
         error = "Cannot add user."
         print(app.config.get("DEBUG"))
         if app.config.get("DEBUG"):
             error += str(e)
         return make_response(jsonify({"code": 404, "msg": error}), 404)
-    return jsonify({"code": 200, "msg": "success"})
+    return jsonify(row2dict(added_user))
 
 
 @bp.route("/<user_id>", methods=['DELETE'])
@@ -70,6 +72,6 @@ def delete_user(user_id):
             db.session.commit()
             return jsonify({"code": 200, "msg": "success"})
         except sqlalchemy.exc.IntegrityError:
-            return make_response(jsonify({"code": 400, "msg": "This user has existing vote"}), 400)
+            return make_response(jsonify({"code": 400, "msg": "This user has existing votes"}), 400)
     else:
         return make_response(jsonify({"code": 404, "msg": "User not found"}), 404)
