@@ -28,19 +28,22 @@ def get_post(post_id):
 def update_post(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if post:
-        try:
+        if 'title' in request.form:
             post.title = request.form['title']
-        except BadRequestKeyError:
-            return make_response(jsonify({"code": 400, "msg": "missing title"}), 400)
+        if 'url_one' in request.form:
+            post.url_one = request.form['url_one']
+        if 'url_two' in request.form:
+            post.url_two = request.form['url_two']
         try:
             db.session.commit()
+            updated_post = Post.query.filter_by(id=post_id).first()
         except sqlalchemy.exc.SQLAlchemyError as e:
             error = "Cannot update post. "
             print(app.config.get("DEBUG"))
             if app.config.get("DEBUG"):
                 error += str(e)
             return make_response(jsonify({"code": 404, "msg": error}), 404)
-        return jsonify({"code": 200, "msg": "success"})
+        return jsonify(row2dict(updated_post))
     else:
         return make_response(jsonify({"code": 404, "msg": "Cannot find this post."}), 404)
 
@@ -48,19 +51,20 @@ def update_post(post_id):
 @bp.route("/", methods=['POST'])
 def add_post():
     try:
-        newPost = Post(title=request.form['title'])
+        newPost = Post(title=request.form['title'], url_one=request.form['url_one'], url_two=request.form['url_two'])
     except BadRequestKeyError:
-        return make_response(jsonify({"code": 400, "msg": "missing title"}), 400)
+        return make_response(jsonify({"code": 400, "msg": "missing parameters"}), 400)
     db.session.add(newPost)
     try:
         db.session.commit()
+        added_post = Post.query.filter_by(id=newPost.id).first()
     except sqlalchemy.exc.SQLAlchemyError as e:
         error = "Cannot add post."
         print(app.config.get("DEBUG"))
         if app.config.get("DEBUG"):
             error += str(e)
         return make_response(jsonify({"code": 404, "msg": error}), 404)
-    return jsonify({"code": 200, "msg": "success"})
+    return jsonify(row2dict(added_post))
 
 
 @bp.route("/<post_id>", methods=['DELETE'])
@@ -72,6 +76,6 @@ def delete_post(post_id):
             db.session.commit()
             return jsonify({"code": 200, "msg": "success"})
         except sqlalchemy.exc.IntegrityError:
-            return make_response(jsonify({"code": 400, "msg": "This post has existing vote"}), 400)
+            return make_response(jsonify({"code": 400, "msg": "This post has existing votes"}), 400)
     else:
         return make_response(jsonify({"code": 404, "msg": "Cannot find this post."}), 404)

@@ -13,10 +13,10 @@ class TestVote(unittest.TestCase):
         # set up the test DB
         self.db = tested_db
         self.db.create_all()
-        self.db.session.add(User(id=1, name="Edouard"))
-        self.db.session.add(User(id=2, name="Marin"))
-        self.db.session.add(Post(id=1, title="Hello"))
-        self.db.session.add(Post(id=2, title="Word"))
+        self.db.session.add(User(id=1, name="Alice", mail="alice@soen.com", pwdhash="steakhasher"))
+        self.db.session.add(User(id=2, name="Bob", mail="bob@soen.com", pwdhash="steakhasher"))
+        self.db.session.add(Post(id=1, title="Hello", url_one="url1", url_two="url2"))
+        self.db.session.add(Post(id=2, title="World", url_one="url1", url_two="url2"))
         self.db.session.commit()
         self.db.session.add(Vote(user_id=1, post_id=1, value=0))
         self.db.session.add(Vote(user_id=1, post_id=2, value=0))
@@ -76,7 +76,7 @@ class TestVote(unittest.TestCase):
 
         # convert the response data from json and call the asserts
         body = json.loads(str(response.data, "utf8"))
-        self.assertDictEqual(body, {"code": 200, "msg": "success"})
+        self.assertDictEqual(body, {"user_id": "2", "post_id": "2", "value": "0"})
 
         # check if the DB was updated correctly
         vote = Vote.query.filter_by(user_id=2, post_id=2).first()
