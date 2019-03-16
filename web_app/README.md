@@ -1,6 +1,6 @@
-# vtest
+# web_app
 
-> My good Nuxt.js project
+> Nuxt.js web app for CatVsDog project
 
 ## Build Setup
 
