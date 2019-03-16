@@ -1,10 +1,7 @@
 <template>
   <div style="margin-top:50px">
-    <Post v-for="(post, index) in posts" :key="index" :post="post"/>salope
-    ntm
-    <i class="fa-accessible-icon"/>
-    grosse pute
-    <div class="far fa-thumbs-up">azd</div>
+    <Post v-for="(post, index) in posts" :key="index" :post="post"/>
+    <fa icon="thumbs-up"/>
   </div>
 </template>
 

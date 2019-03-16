@@ -1,12 +1,7 @@
 const pkg = require('./package')
 
 module.exports = {
-  link: [
-    {
-      rel: 'stylesheet',
-      href: 'https://use.fontawesome.com/releases/v5.7.2/css/all.css'
-    }
-  ],
+  link: [],
   mode: 'universal',
 
   /*
@@ -41,10 +36,22 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    'nuxt-buefy'
+    'nuxt-buefy',
+    [
+      'nuxt-fontawesome',
+      {
+        component: 'fa',
+        imports: [
+          {
+            set: '@fortawesome/free-solid-svg-icons',
+            icons: ['fas']
+          }
+        ]
+      }
+    ]
   ],
+
   /*
   ** Axios module configuration
   */

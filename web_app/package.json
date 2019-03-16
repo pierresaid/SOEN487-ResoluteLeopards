@@ -1,7 +1,7 @@
 {
-  "name": "vtest",
+  "name": "cat_vs_dog_web_app",
   "version": "1.0.0",
-  "description": "My good Nuxt.js project",
+  "description": "CatVsDog",
   "author": "Pierre SAID",
   "private": true,
   "scripts": {
@@ -13,9 +13,9 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "@fortawesome/fontawesome": "^1.1.8",
-    "@fortawesome/fontawesome-free-brands": "^5.0.13",
-    "@fortawesome/fontawesome-free-solid": "^5.0.13",
+    "@fortawesome/fontawesome-svg-core": "^1.2.15",
+    "@fortawesome/free-solid-svg-icons": "^5.7.2",
+    "@fortawesome/vue-fontawesome": "^0.1.5",
     "@nuxtjs/axios": "^5.3.6",
     "cross-env": "^5.2.0",
     "i": "^0.3.6",
