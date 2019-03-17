@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-fixed-top is-dark" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <nuxt-link to="/" class="navbar-item">
           <img src="~/assets/logo.png">
@@ -61,6 +61,19 @@ export default {
   data() {
     return {
       Menuactive: false
+    }
+  },
+  head() {
+    return {
+      titleTemplate: '%s - Real World Events',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content:
+            'Where you can find all the events taking place in your neighborhood'
+        }
+      ]
     }
   }
 }

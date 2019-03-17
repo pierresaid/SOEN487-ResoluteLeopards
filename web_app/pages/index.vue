@@ -1,13 +1,13 @@
 <template>
-  <div style="margin-top:50px">
+  <div style="margin-top:50px; display:flex; justify-content:center;">
     <Post v-for="(post, index) in posts" :key="index" :post="post"/>
-    <fa icon="thumbs-up"/>
   </div>
 </template>
 
 <script>
 import Post from '~/components/post.vue'
 import { mapState } from 'vuex'
+
 export default {
   components: {
     Post
@@ -15,8 +15,8 @@ export default {
   computed: {
     ...mapState({ posts: state => state.post.posts })
   },
-  async fetch({ store }) {
-    await store.dispatch('post/GET_POSTS')
+  created() {
+    this.$store.dispatch('post/GetPosts')
   }
 }
 </script>
