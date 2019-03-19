@@ -47,9 +47,9 @@
           </div>
           <div class="navbar-item">
             <div class="buttons">
-              <button class="button is-primary">
+              <nuxt-link to="/register" class="button is-primary">
                 <strong>Sign up</strong>
-              </button>
+              </nuxt-link>
               <button class="button is-light">Log in</button>
             </div>
           </div>
@@ -109,11 +109,11 @@ export default {
 .dark {
   background-color: rgb(26, 26, 27);
 }
-.app-is-dark :not(input) {
+.app-is-dark :not(input, path) {
   color: white;
 }
 
-.dark :not(input) {
+.dark :not(input, path) {
   color: white;
 }
 

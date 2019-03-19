@@ -2,7 +2,8 @@ import { Toast } from 'buefy/dist/components/toast'
 
 export const state = () => ({
   posts: [],
-  fetchedPosts: false
+  fetchedPosts: false,
+  uploading: false
 })
 
 export const mutations = {
@@ -17,6 +18,9 @@ export const mutations = {
   },
   ADD_POSTS(state, posts) {
     state.posts = state.posts.concat(posts)
+  },
+  SET_UPLOADING(state, uploading) {
+    state.uploading = uploading
   }
 }
 
@@ -35,11 +39,15 @@ export const actions = {
     }
   },
   async Create({ commit }, post) {
+    commit('SET_UPLOADING', true)
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+    await sleep(500)
     commit('ADD_POST', { id: DebugId, ...post })
     ++DebugId
     Toast.open({
       message: 'Upload successful',
       type: 'is-success'
     })
+    commit('SET_UPLOADING', false)
   }
 }

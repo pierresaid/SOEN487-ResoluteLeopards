@@ -34,6 +34,7 @@
         :disabled="FormHasError"
         style="margin-top:10px"
         class="button is-success"
+        :class="{'is-loading' : uploading}"
         @click="create(new_post)"
       >Submit</button>
     </box>
@@ -58,7 +59,10 @@ export default {
     }
   },
   computed: {
-    ...mapState({ theme: state => state.user.theme }),
+    ...mapState({
+      theme: state => state.user.theme,
+      uploading: state => state.post.uploading
+    }),
     new_post() {
       return {
         title: this.title,
@@ -68,12 +72,11 @@ export default {
     },
     FormHasError() {
       return (
-        false &&
-        (this.img_one_err ||
-          this.img_two_err ||
-          this.title === '' ||
-          this.url_one === null ||
-          this.url_two === null)
+        this.img_one_err ||
+        this.img_two_err ||
+        this.title === '' ||
+        this.url_one === null ||
+        this.url_two === null
       )
     }
   },
