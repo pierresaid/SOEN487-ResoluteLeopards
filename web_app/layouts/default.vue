@@ -1,9 +1,16 @@
 <template>
   <div>
-    <nav class="navbar is-fixed-top is-dark" role="navigation" aria-label="main navigation">
+    <nav
+      class="navbar is-fixed-top"
+      :class="'is-' + theme"
+      style="box-shadow: 0px 0px 5px grey;"
+      role="navigation"
+      aria-label="main navigation"
+    >
       <div class="navbar-brand">
         <nuxt-link to="/" class="navbar-item">
-          <img src="~/assets/logo.png">
+          <img v-if="theme === 'light'" src="~/assets/logo-light.png">
+          <img v-else src="~/assets/logo-dark.png">
         </nuxt-link>
 
         <a
@@ -21,7 +28,7 @@
         </a>
       </div>
 
-      <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active' : Menuactive}">
+      <div class="navbar-menu" :class="{'is-active' : Menuactive}">
         <div class="navbar-start">
           <nuxt-link to="/" class="navbar-item">Home</nuxt-link>
           <nuxt-link to="/user" class="navbar-item">Users</nuxt-link>
@@ -29,18 +36,21 @@
 
         <div class="navbar-end">
           <div class="navbar-item">
+            <night-mode/>
+          </div>
+          <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-primary">
+              <button class="button is-primary">
                 <strong>Sign up</strong>
-              </a>
-              <a class="button is-light">Log in</a>
+              </button>
+              <button class="button is-light">Log in</button>
             </div>
           </div>
         </div>
       </div>
     </nav>
 
-    <section class="section">
+    <section class="section" :class="theme === 'light' ? 'background' : 'dark-background'">
       <div class="container">
         <nuxt/>
       </div>
@@ -57,7 +67,13 @@
 </template>
 
 <script>
+import NightMode from '~/components/NightMode'
+import { mapState } from 'vuex'
+
 export default {
+  components: {
+    NightMode
+  },
   data() {
     return {
       Menuactive: false
@@ -65,27 +81,36 @@ export default {
   },
   head() {
     return {
-      titleTemplate: '%s - Real World Events',
+      titleTemplate: 'Cat VS Dog',
       meta: [
         {
-          hid: 'description',
-          name: 'description',
-          content:
-            'Where you can find all the events taking place in your neighborhood'
+          content: 'The only battle worth fighting'
         }
       ]
     }
+  },
+  computed: {
+    ...mapState({ theme: state => state.user.theme })
   }
 }
 </script>
 
-<style scoped>
+<style>
 .container {
-  /* margin: 0 auto; */
   min-height: 100vh;
-  /* display: flex; */
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* text-align: center; */
+}
+.dark {
+  background-color: rgb(26, 26, 27);
+}
+.dark > * {
+  color: white;
+}
+
+.background {
+  background-color: #dae0e6;
+}
+
+.dark-background {
+  background-color: black;
 }
 </style>

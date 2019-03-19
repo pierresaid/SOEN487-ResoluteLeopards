@@ -1,16 +1,13 @@
 export const state = () => ({
   name: 'JeanValjean',
-  list: []
+  theme: 'dark'
 })
 
 export const mutations = {
   changeName(state, newName) {
     state.name = newName
   },
-  remove(state, { todo }) {
-    state.list.splice(state.list.indexOf(todo), 1)
-  },
-  toggle(state, todo) {
-    todo.done = !todo.done
+  toggleTheme(state) {
+    state.theme = state.theme === 'light' ? 'dark' : 'light'
   }
 }
