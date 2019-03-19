@@ -2,6 +2,7 @@
   <transition name="fade">
     <div v-show="loaded === 2" class="box post" :class="theme">
       <h1 class="title">{{post.title}}</h1>
+      <h2 class="subtitle">Subtitle</h2>
       <div style="display:flex; flex-direction:column;">
         <div style="display:flex; flex-direction:row; justify-content: space-between; width:100%">
           <img class="post-picture" :src="post.url_one" @load="OnImgLoad">

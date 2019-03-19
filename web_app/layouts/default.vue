@@ -31,10 +31,17 @@
       <div class="navbar-menu" :class="{'is-active' : Menuactive}">
         <div class="navbar-start">
           <nuxt-link to="/" class="navbar-item">Home</nuxt-link>
-          <nuxt-link to="/user" class="navbar-item">Users</nuxt-link>
         </div>
 
         <div class="navbar-end">
+          <div class="navbar-item">
+            <nuxt-link to="/NewPost">
+              <button class="button is-primary is-info">
+                <fa icon="plus" class="fa-lg"/>
+              </button>
+            </nuxt-link>
+          </div>
+
           <div class="navbar-item">
             <night-mode/>
           </div>
@@ -52,11 +59,11 @@
 
     <section class="section" :class="theme === 'light' ? 'background' : 'dark-background'">
       <div class="container">
-        <nuxt/>
+        <nuxt :class="'app-is-' + theme"/>
       </div>
     </section>
 
-    <footer class="footer">
+    <footer class="footer" :class="theme">
       <div class="content has-text-centered">
         <p>
           <strong>Cat vs Dog</strong> by the ResoluteLeopards for the SOEN487 Project
@@ -102,7 +109,11 @@ export default {
 .dark {
   background-color: rgb(26, 26, 27);
 }
-.dark > * {
+.app-is-dark :not(input) {
+  color: white;
+}
+
+.dark :not(input) {
   color: white;
 }
 

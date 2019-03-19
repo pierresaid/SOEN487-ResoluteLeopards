@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top:50px; display:flex; justify-content:center;">
+  <div style="margin-top:50px; display:flex; flex-direction:column; justify-content:center;">
     <Post v-for="(post, index) in posts" :key="index" :post="post"/>
   </div>
 </template>
@@ -13,10 +13,13 @@ export default {
     Post
   },
   computed: {
-    ...mapState({ posts: state => state.post.posts })
+    ...mapState({
+      posts: state => state.post.posts,
+      postAreFetched: state => state.post.fetchedPosts
+    })
   },
   created() {
-    this.$store.dispatch('post/GetPosts')
+    if (!this.postAreFetched) this.$store.dispatch('post/GetPosts')
   }
 }
 </script>
