@@ -5,13 +5,18 @@
       <fa :icon="icon" style="color:black"/>
     </span>
   </p>
-  <b-input placeholder="azd" v-else/>
+  <b-input v-else v-bind="$attrs" v-on="$listeners"/>
 </template>
 
 <script>
 export default {
-  props: ['icon'],
-  inheritAttrs: false
+  inheritAttrs: false,
+  props: {
+    icon: {
+      type: String,
+      default: undefined
+    }
+  }
 }
 </script>
 

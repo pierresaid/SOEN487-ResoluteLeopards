@@ -6,7 +6,7 @@
 
 <script>
 import Post from '~/components/post.vue'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -14,9 +14,9 @@ export default {
   },
   computed: {
     ...mapState({
-      posts: state => state.post.posts,
       postAreFetched: state => state.post.fetchedPosts
-    })
+    }),
+    ...mapGetters({ posts: 'post/formated_posts' })
   },
   created() {
     if (!this.postAreFetched) this.$store.dispatch('post/GetPosts')

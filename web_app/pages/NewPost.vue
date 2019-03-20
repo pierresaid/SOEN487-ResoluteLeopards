@@ -6,10 +6,7 @@
         <b-input v-model="title" placeholder="Title"/>
       </b-field>
       <b-field label="Your Dog Picture" style="width:100%;" :class="theme">
-        <div style="display:flex; align-items: center;">
-          <fa icon="dog" style="margin-right:10px"/>
-          <b-input v-model="url_one" placeholder="Dog Picture Url" style="width: 100%;"/>
-        </div>
+        <c-input v-model="url_one" placeholder="Dog Picture Url" style="width: 100%;" icon="dog"/>
       </b-field>
       <img
         v-show="!img_one_err && url_one !== null"
@@ -19,10 +16,7 @@
       >
 
       <b-field label="Your Cat Picture" style="width:100%;" :class="theme">
-        <div style="display:flex; align-items: center;">
-          <fa icon="cat" style="margin-right:10px"/>
-          <b-input v-model="url_two" placeholder="Cat Picture Url" style="width: 100%;"/>
-        </div>
+        <c-input v-model="url_two" placeholder="Cat Picture Url" style="width: 100%;" icon="cat"/>
       </b-field>
       <img
         v-show="!img_two_err && url_two !== null"
@@ -30,13 +24,15 @@
         @load="img_two_err = false"
         @error="img_two_err = true"
       >
-      <button
-        :disabled="FormHasError"
-        style="margin-top:10px"
-        class="button is-success"
-        :class="{'is-loading' : uploading}"
-        @click="create(new_post)"
-      >Submit</button>
+      <b-field style="width:100%;" :class="theme">
+        <button
+          :disabled="FormHasError"
+          style="margin-top:10px"
+          class="button is-success"
+          :class="{'is-loading' : uploading}"
+          @click="create(new_post)"
+        >Submit</button>
+      </b-field>
     </box>
   </div>
 </template>
@@ -44,10 +40,12 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import box from '~/components/box'
+import input from '~/components/input'
 
 export default {
   components: {
-    box
+    box,
+    'c-input': input
   },
   data() {
     return {

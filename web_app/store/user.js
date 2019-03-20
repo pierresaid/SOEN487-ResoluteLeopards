@@ -1,6 +1,7 @@
 import { Toast } from 'buefy/dist/components/toast'
 
 export const state = () => ({
+  id: 1,
   name: 'JeanValjean',
   theme: 'dark',
   uploading: false

@@ -2,9 +2,21 @@ import { Toast } from 'buefy/dist/components/toast'
 
 export const state = () => ({
   posts: [],
+  votes: [],
   fetchedPosts: false,
   uploading: false
 })
+
+export const getters = {
+  formated_posts(state, getters, rootState) {
+    return state.posts.map(p => {
+      const userVote = state.votes.find(
+        v => v.user_id === rootState.user.id && v.post_id === p.id
+      )
+      return { user_vote: userVote !== undefined ? userVote.value : -1, ...p }
+    })
+  }
+}
 
 export const mutations = {
   SET_FETCHED_POSTS(state) {
@@ -21,6 +33,16 @@ export const mutations = {
   },
   SET_UPLOADING(state, uploading) {
     state.uploading = uploading
+  },
+  SET_VOTE(state, { postId, idx, userId }) {
+    let res = state.votes.find(
+      v => v.user_id === userId && v.post_id === postId
+    )
+    if (res) {
+      res.value = idx
+    } else {
+      state.votes.push({ user_id: userId, post_id: postId, value: idx })
+    }
   }
 }
 
@@ -49,5 +71,14 @@ export const actions = {
       type: 'is-success'
     })
     commit('SET_UPLOADING', false)
+  },
+  async Vote({ commit, rootState }, { postId, idx }) {
+    // commit('SET_UPLOADING', true)
+    // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await sleep(500)
+
+    commit('SET_VOTE', { postId, idx, userId: rootState.user.id })
+
+    // commit('SET_UPLOADING', false)
   }
 }

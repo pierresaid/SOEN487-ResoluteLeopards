@@ -5,8 +5,20 @@
       <h2 class="subtitle">Subtitle</h2>
       <div style="display:flex; flex-direction:column;">
         <div style="display:flex; flex-direction:row; justify-content: space-between; width:100%">
-          <img class="post-picture" :src="post.url_one" @load="OnImgLoad">
-          <img class="post-picture" :src="post.url_two" @load="OnImgLoad">
+          <img
+            class="post-picture"
+            :class="{'voted' : post.user_vote === 0}"
+            :src="post.url_one"
+            @load="OnImgLoad"
+            @click="clickVote(0)"
+          >
+          <img
+            class="post-picture"
+            :class="{'voted' : post.user_vote === 1}"
+            :src="post.url_two"
+            @load="OnImgLoad"
+            @click="clickVote(1)"
+          >
         </div>
       </div>
     </div>
@@ -14,7 +26,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   props: {
@@ -32,8 +44,15 @@ export default {
     ...mapState({ theme: state => state.user.theme })
   },
   methods: {
+    ...mapActions({ vote: 'post/Vote' }),
     OnImgLoad() {
       this.loaded += 1
+    },
+    clickVote(idx) {
+      this.vote({
+        postId: this.post.id,
+        idx: idx === this.post.user_vote ? -1 : idx
+      })
     }
   }
 }
@@ -61,10 +80,17 @@ export default {
   -webkit-user-select: none;
   -ms-user-select: none;
   background-color: white;
+
+  transition: all 0.2s;
 }
 
 .post-picture:hover {
   background-color: #22c65b;
   border-color: #22c65b;
+}
+.post-picture.voted {
+  background-color: #22c65b;
+  border-color: #22c65b;
+  transform: scale(1.05);
 }
 </style>
