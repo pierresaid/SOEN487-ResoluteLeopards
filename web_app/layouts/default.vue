@@ -53,7 +53,7 @@
               <nuxt-link to="/register" class="button is-primary">
                 <strong>Sign up</strong>
               </nuxt-link>
-              <button class="button is-light">Log in</button>
+              <nuxt-link to="/login" class="button is-light">Log in</nuxt-link>
             </div>
           </div>
         </div>

@@ -31,5 +31,17 @@ export const actions = {
       type: 'is-success'
     })
     commit('SET_UPLOADING', false)
+  },
+  async Login({ commit }, user) {
+    commit('SET_UPLOADING', true)
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+    await sleep(500)
+    console.log(user)
+
+    Toast.open({
+      message: 'Welcome !',
+      type: 'is-success'
+    })
+    commit('SET_UPLOADING', false)
   }
 }
