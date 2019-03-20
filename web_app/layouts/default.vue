@@ -9,8 +9,8 @@
     >
       <div class="navbar-brand">
         <nuxt-link to="/" class="navbar-item">
-          <img v-if="theme === 'light'" src="~/assets/logo-light.png">
-          <img v-else src="~/assets/logo-dark.png">
+          <img v-if="theme === 'light'" src="~/assets/logo_light.png">
+          <img v-else src="~/assets/logo_dark.png">
         </nuxt-link>
 
         <a
