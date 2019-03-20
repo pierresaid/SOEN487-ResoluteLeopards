@@ -1,5 +1,7 @@
 <template>
-  <div style="margin-top:50px; display:flex; flex-direction:column; justify-content:center;">
+  <div
+    style="margin-top:50px; display:flex; align-items: center; flex-direction:column; justify-content:center;"
+  >
     <Post v-for="(post, index) in posts" :key="index" :post="post"/>
   </div>
 </template>

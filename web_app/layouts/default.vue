@@ -28,7 +28,10 @@
         </a>
       </div>
 
-      <div class="navbar-menu" :class="{'is-active' : Menuactive}">
+      <div
+        class="navbar-menu"
+        :class="{'is-active' : Menuactive, 'mobile-active-is-dark' : theme === 'dark'}"
+      >
         <div class="navbar-start">
           <nuxt-link to="/" class="navbar-item">Home</nuxt-link>
         </div>
@@ -123,5 +126,16 @@ export default {
 
 .dark-background {
   background-color: black;
+}
+.mobile-active-is-dark {
+  background-color: #363636;
+}
+.mobile-active-is-dark a {
+  color: white;
+}
+
+.mobile-active-is-dark a:hover {
+  background-color: #2f2f2f;
+  color: white;
 }
 </style>
