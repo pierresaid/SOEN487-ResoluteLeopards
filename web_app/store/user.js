@@ -1,6 +1,7 @@
 import { Toast } from 'buefy/dist/components/toast'
 
 export const state = () => ({
+  isLogged: false,
   id: 1,
   name: 'JeanValjean',
   theme: 'dark',
@@ -16,6 +17,9 @@ export const mutations = {
   },
   SET_UPLOADING(state, uploading) {
     state.uploading = uploading
+  },
+  SET_LOGGED(state, logged) {
+    state.isLogged = logged
   }
 }
 
@@ -30,6 +34,7 @@ export const actions = {
       message: 'Welcome !',
       type: 'is-success'
     })
+    commit('SET_LOGGED', true)
     commit('SET_UPLOADING', false)
   },
   async Login({ commit }, user) {
@@ -42,6 +47,10 @@ export const actions = {
       message: 'Welcome !',
       type: 'is-success'
     })
+    commit('SET_LOGGED', true)
     commit('SET_UPLOADING', false)
+  },
+  async Logout({ commit }) {
+    commit('SET_LOGGED', false)
   }
 }

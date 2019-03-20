@@ -2,7 +2,7 @@
   <transition name="fade">
     <div v-show="loaded === 2" class="box post" :class="theme">
       <h1 class="title">{{post.title}}</h1>
-      <h2 class="subtitle">Subtitle</h2>
+      <h2 style="color:#adadad" class="subtitle">Subtitle</h2>
 
       <div style="display:flex; flex-wrap: wrap; justify-content:center; align-items: center;">
         <img

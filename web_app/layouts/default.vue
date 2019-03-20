@@ -36,7 +36,7 @@
           <nuxt-link to="/" class="navbar-item">Home</nuxt-link>
         </div>
 
-        <div class="navbar-end">
+        <div style="margin-right:30px" class="navbar-end">
           <div class="navbar-item">
             <nuxt-link to="/NewPost">
               <button class="button is-primary is-info">
@@ -48,7 +48,18 @@
           <div class="navbar-item">
             <night-mode/>
           </div>
-          <div class="navbar-item">
+
+          <div v-if="isLogged" class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link is-arrowless">
+              <avatar style="margin-right:10px" :size="40" :username="userName"/>
+            </a>
+
+            <div class="navbar-dropdown" :class="{'mobile-active-is-dark' : theme === 'dark'}">
+              <a @click="logout" style="padding-right:0px" class="navbar-item">Logout</a>
+            </div>
+          </div>
+
+          <div v-else class="navbar-item">
             <div class="buttons">
               <nuxt-link to="/register" class="button is-primary">
                 <strong>Sign up</strong>
@@ -78,10 +89,12 @@
 
 <script>
 import NightMode from '~/components/NightMode'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import Avatar from 'vue-avatar'
 
 export default {
   components: {
+    Avatar,
     NightMode
   },
   data() {
@@ -100,7 +113,14 @@ export default {
     }
   },
   computed: {
-    ...mapState({ theme: state => state.user.theme })
+    ...mapState({
+      userName: state => state.user.name,
+      theme: state => state.user.theme,
+      isLogged: state => state.user.isLogged
+    })
+  },
+  methods: {
+    ...mapActions({ logout: 'user/Logout' })
   }
 }
 </script>
@@ -129,12 +149,18 @@ export default {
 }
 .mobile-active-is-dark {
   background-color: #363636;
+  border-color: #363636;
 }
 .mobile-active-is-dark a {
   color: white;
 }
 
 .mobile-active-is-dark a:hover {
+  background-color: #2f2f2f;
+  color: white;
+}
+
+.mobile-active-is-dark .navbar-dropdown a.navbar-item:hover {
   background-color: #2f2f2f;
   color: white;
 }
