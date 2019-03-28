@@ -55,7 +55,7 @@
             </a>
 
             <div class="navbar-dropdown" :class="{'mobile-active-is-dark' : theme === 'dark'}">
-              <a @click="logout" style="padding-right:0px" class="navbar-item">Logout</a>
+              <a style="padding-right:0px" class="navbar-item" @click="logout">Logout</a>
             </div>
           </div>
 
