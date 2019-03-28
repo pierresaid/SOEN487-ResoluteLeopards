@@ -52,9 +52,14 @@
           <div v-if="isLogged" class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link is-arrowless">
               <avatar style="margin-right:10px" :size="40" :username="userName"/>
+              <span>{{userName}}</span>
             </a>
 
             <div class="navbar-dropdown" :class="{'mobile-active-is-dark' : theme === 'dark'}">
+              <nuxt-link to="/Profile">
+                <a style="padding-right:0px" class="navbar-item">Profile</a>
+              </nuxt-link>
+
               <a style="padding-right:0px" class="navbar-item" @click="logout">Logout</a>
             </div>
           </div>
@@ -163,5 +168,24 @@ export default {
 .mobile-active-is-dark .navbar-dropdown a.navbar-item:hover {
   background-color: #2f2f2f;
   color: white;
+}
+
+.xl-size * {
+  font-size: 42px !important;
+}
+
+.l-size * {
+  font-size: 32px !important;
+}
+
+.m-size * {
+  font-size: 24px !important;
+}
+
+.s-size * {
+  font-size: 14px !important;
+}
+.xs-size * {
+  font-size: 8px !important;
 }
 </style>

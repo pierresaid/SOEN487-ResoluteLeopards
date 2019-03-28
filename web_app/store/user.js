@@ -9,6 +9,7 @@ export const state = () => ({
   isLogged: false,
   id: -1,
   name: null,
+  mail: null,
   theme: 'dark',
   uploading: false,
   access_token: null,
