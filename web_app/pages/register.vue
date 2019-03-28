@@ -3,6 +3,9 @@
     <div style="margin-top:50px; display: flex; flex-direction:column; align-items: center;">
       <h1 class="title">Register</h1>
       <box style="width:50%; max-width:648px;">
+        <b-field label="Name" :class="theme">
+          <c-input v-model="name" type="text" placeholder="Name" icon="user"/>
+        </b-field>
         <b-field label="Email" :class="theme">
           <c-input v-model="email" type="email" placeholder="Email" icon="envelope"/>
         </b-field>
@@ -35,6 +38,7 @@ export default {
   },
   data() {
     return {
+      name: '',
       email: '',
       password: '',
       emailError: false
@@ -51,15 +55,22 @@ export default {
         return re.test(email)
       }
       return (
-        this.email === '' || this.password === '' || !validateEmail(this.email)
+        this.name === '' ||
+        this.email === '' ||
+        this.password === '' ||
+        !validateEmail(this.email)
       )
     }
   },
   methods: {
     ...mapActions({ register: 'user/Register' }),
     async submit() {
-      await this.register({ email: this.email, password: this.password })
-      this.$nuxt.$router.replace({ path: '/' })
+      const res = await this.register({
+        name: this.name,
+        email: this.email,
+        pwdhash: this.password
+      })
+      if (res) this.$nuxt.$router.replace({ path: '/' })
     }
   }
 }

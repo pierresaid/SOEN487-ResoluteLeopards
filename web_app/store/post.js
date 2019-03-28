@@ -1,5 +1,7 @@
 import { Toast } from 'buefy/dist/components/toast'
 
+const BaseUrl = 'http://localhost:5000/'
+
 export const state = () => ({
   posts: [],
   votes: [],
@@ -50,7 +52,7 @@ let DebugId = 2
 export const actions = {
   async GetPosts({ commit }) {
     try {
-      let posts = await this.$axios.$get('post/')
+      let posts = await this.$axios.$get(BaseUrl + 'post/')
       commit('ADD_POSTS', posts)
       commit('SET_FETCHED_POSTS')
     } catch (error) {

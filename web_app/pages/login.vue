@@ -58,8 +58,8 @@ export default {
   methods: {
     ...mapActions({ login: 'user/Login' }),
     async submit() {
-      await this.login({ email: this.email, password: this.password })
-      this.$nuxt.$router.replace({ path: '/' })
+      let res = await this.login({ email: this.email, password: this.password })
+      if (res) this.$nuxt.$router.replace({ path: '/' })
     }
   }
 }
