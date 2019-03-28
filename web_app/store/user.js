@@ -1,4 +1,7 @@
-import { Toast } from 'buefy/dist/components/toast'
+import {
+  SuccessNotification,
+  ErrorNotification
+} from '../helpers/Notifications'
 
 const BaseUrl = 'http://localhost:5001/'
 
@@ -60,18 +63,12 @@ export const actions = {
         mail: response.data.mail,
         name: response.data.name
       })
-      Toast.open({
-        message: 'Welcome !',
-        type: 'is-success'
-      })
+      SuccessNotification('Welcome !')
       commit('SET_UPLOADING', false)
       commit('SET_LOGGED', true)
       return true
     } catch (error) {
-      Toast.open({
-        message: error.response ? error.response.data.msg : error.message,
-        type: 'is-danger'
-      })
+      ErrorNotification(error)
     }
     commit('SET_UPLOADING', false)
   },
@@ -95,18 +92,12 @@ export const actions = {
         mail: response.data.mail,
         name: response.data.name
       })
-      Toast.open({
-        message: 'Welcome !',
-        type: 'is-success'
-      })
+      SuccessNotification('Welcome !')
       commit('SET_LOGGED', true)
       commit('SET_UPLOADING', false)
       return true
     } catch (error) {
-      Toast.open({
-        message: error.response ? error.response.data.msg : error.message,
-        type: 'is-danger'
-      })
+      ErrorNotification(error)
     }
     commit('SET_UPLOADING', false)
     return false

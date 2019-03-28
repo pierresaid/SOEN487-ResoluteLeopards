@@ -1,4 +1,7 @@
-import { Toast } from 'buefy/dist/components/toast'
+import {
+  SuccessNotification,
+  ErrorNotification
+} from '../helpers/Notifications'
 
 const BaseUrl = 'http://localhost:5000/'
 
@@ -56,10 +59,7 @@ export const actions = {
       commit('ADD_POSTS', posts)
       commit('SET_FETCHED_POSTS')
     } catch (error) {
-      Toast.open({
-        message: error,
-        type: 'is-danger'
-      })
+      ErrorNotification(error)
     }
   },
   async Create({ commit }, post) {
@@ -68,10 +68,7 @@ export const actions = {
     await sleep(500)
     commit('ADD_POST', { id: DebugId, ...post })
     ++DebugId
-    Toast.open({
-      message: 'Upload successful',
-      type: 'is-success'
-    })
+    SuccessNotification('Upload successful')
     commit('SET_UPLOADING', false)
   },
   async Vote({ commit, rootState }, { postId, idx }) {
