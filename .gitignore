@@ -106,3 +106,7 @@ venv.bak/
 .idea
 
 *.sqlite
+
+# UserAPI
+user_api/keys/keylist.json
+*.pem
