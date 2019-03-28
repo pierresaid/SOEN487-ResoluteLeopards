@@ -25,7 +25,7 @@ def login():
     tokens = create_tokens_for_user(user)
 
     # Send token to the user
-    return jsonify({"code": 200, "msg": "Success", **tokens}), 200
+    return jsonify({"code": 200, "msg": "Success", **tokens, "id": user.id}), 200
 
 
 @bp.route("/register", methods=['POST'])
@@ -40,7 +40,7 @@ def register():
     tokens = create_tokens_for_user(user)
 
     # Send token to the user
-    return jsonify({"code": 200, "msg": "Success", **tokens}), 200
+    return jsonify({"code": 200, "msg": "Success", **tokens, "id" : user.id}), 200
 
 
 @bp.route("/token/<refresh_token>", methods=['GET'])
