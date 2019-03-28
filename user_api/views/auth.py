@@ -10,8 +10,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route("/login", methods=['POST'])
 def login():
-   data = request.get_json()
-    
+    data = request.get_json()
     # Validate request form
     mail = data['mail']
     pwdhash = data['pwdhash']
