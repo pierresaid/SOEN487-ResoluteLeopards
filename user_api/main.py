@@ -1,19 +1,16 @@
+import os
 from flask import Flask, request, jsonify
 from jwcrypto import jwt, jws, jwk
+from exceptions import ApiError
 from config import DevConfig
-import json
-import os
+from keys import load_keys, load_key
 
 app = Flask(__name__)
 app.config.from_object(DevConfig)
 
-key = None
-# TODO: read key location from config + add *.pem to gitignore
-with open(os.path.dirname(os.path.realpath(__file__)) + "/key.pem", mode="rb") as f:
-    # keys = [jwk.construct(key) for key in json.loads(f.read())["keys"]]
-    # keys = jwk.JWKSet.from_json(f.read())
-    key = jwk.JWK.from_pem(f.read(), b"123456") # jwk.JWK.from_json(f.read())
-    print(key)
+# Signing Keys have to be loaded on start
+keys = load_keys(os.path.join(os.path.dirname(__file__), app.config["KEY_LIST_PATH"]))
+key = load_key(keys)
 
 from views import user, auth
 
@@ -25,19 +22,20 @@ app.register_blueprint(auth.bp)
 def hello_world():
     return 'Hello World!'
 
+
 @app.route('/jwt/key')
 def obtain_public_key():
-    r = app.make_response(key.export_public())
+    r = app.make_response(keys.export(private_keys=False))
     r.headers["Content-Type"] = "application/json"
     return r
+
 
 @app.route('/jwt/obtain')
 def obtain_token():
     token = jwt.JWT(header={"alg": "RS256"}, claims={"info": "I'm a signed token"})
-    #key = keys.get_key("001")
-    print(key.export())
     token.make_signed_token(key)
-    return token.serialize()
+    return jsonify({"token": token.serialize()})
+
 
 @app.route('/jwt/verify')
 def verify_token():
@@ -48,11 +46,11 @@ def verify_token():
     try:
         tok = jwt.JWT(jwt=token).token
         tok.verify(public_key)
-        return "Valid token"
+        return jsonify({"valid": True})
     except jws.InvalidJWSSignature:
-        return "Unable to verify signature"
+        return jsonify({"valid": False})
     except:
-        return "Invalid token"
+        raise ApiError(400, "Invalid token format")
 
 
 if __name__ == '__main__':

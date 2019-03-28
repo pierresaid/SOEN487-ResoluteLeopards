@@ -8,6 +8,7 @@ class ProdConfig(Config):
 
 
 class DevConfig(Config):
+    KEY_LIST_PATH = "keys/keylist.json"
     DEBUG = True
 
 
