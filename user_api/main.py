@@ -5,7 +5,11 @@ from exceptions import ApiError
 from config import DevConfig
 from keys import load_keys, load_key
 
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
+
 app.config.from_object(DevConfig)
 
 # Signing Keys have to be loaded on start
