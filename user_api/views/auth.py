@@ -10,9 +10,11 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route("/login", methods=['POST'])
 def login():
+   data = request.get_json()
+    
     # Validate request form
-    mail = request.form['mail']
-    pwdhash = request.form['pwdhash']
+    mail = data['mail']
+    pwdhash = data['pwdhash']
     if not mail and not pwdhash:
         return jsonify({"code": 400, "msg": "Bad Request"}), 400
 
@@ -30,8 +32,9 @@ def login():
 @bp.route("/register", methods=['POST'])
 def register():
     try:
+        data = request.get_json()
         # Create the new user
-        user = create_new_user(request.form.get("name"), request.form.get("mail"), request.form.get("pwdhash"))
+        user = create_new_user(data["name"], data["mail"], data["pwdhash"])
     except ApiError as e:
         return jsonify({"code": e.code, "msg": e.msg}), e.code
 
