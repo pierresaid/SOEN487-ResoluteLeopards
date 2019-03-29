@@ -20,14 +20,18 @@
           @click="clickVote(1)"
         >
       </div>
+      <post-votes/>
     </div>
   </transition>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
+import PostVotes from './PostVotes'
 export default {
+  components: {
+    PostVotes
+  },
   props: {
     post: {
       type: Object,
