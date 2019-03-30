@@ -1,9 +1,9 @@
-from models import db
+from main import db
 
 
 class Vote(db.Model):
-    user_id = db.Column(db.Integer, nullable=False, primary_key=True)
     post_id = db.Column(db.Integer, nullable=False, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
     value = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
