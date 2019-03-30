@@ -110,3 +110,5 @@ venv.bak/
 # UserAPI
 user_api/keys/keylist.json
 *.pem
+
+/venv/
