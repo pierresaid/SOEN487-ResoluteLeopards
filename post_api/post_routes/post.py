@@ -9,10 +9,21 @@ post_blueprint = Blueprint('post', __name__)
 
 @app.route('/post/', methods={'GET'})
 def get_all_post():
+    page_size = request.args.get('post_per_page')
+    page = request.args.get('page')
     posts = Post.query.order_by(Post.id)
     for post in posts:
         print(post)
-    return jsonify({'code': 200, 'posts': [row2dict(p) for p in posts]})
+    if page is None or page_size is None:
+        return jsonify({'code': 200, 'posts': [row2dict(p) for p in posts]})
+
+    try:
+        posts = [posts[i: i+page_size] for i in range(0, len(posts), page_size)][page]
+        return jsonify({'code': 200, 'posts': posts})
+    except IndexError:
+        return make_response(jsonify({'code': 400, 'error': 'parameter page exceeds the number of pages'}))
+
+
 
 
 @app.route('/post/<post_id>', methods={'GET'})
@@ -36,7 +47,7 @@ def put_new_post():
     db.session.add(p)
     try:
         db.session.commit()
-    except exc.IntegrityError as e:
+    except exc.IntegrityError:
         error = 'wrong parameters sent\n'
         return make_response(jsonify({"code": 400, "error": error}), 400)
     return make_response(jsonify({"code": 200, "msg": f"{p}"}), 200)
