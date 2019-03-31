@@ -38,6 +38,7 @@ module.exports = {
     'vue/no-use-v-if-with-v-for': ['off'],
     'vue/component-name-in-template-casing': ['off'],
     'vue/no-unused-components': ['off'],
+    'no-unused-vars': [1],
     camelcase: ['off'],
     eqeqeq: ['off'],
     'no-new': ['off']
