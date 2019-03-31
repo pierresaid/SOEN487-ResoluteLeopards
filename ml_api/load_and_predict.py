@@ -14,16 +14,16 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 # print(tf.__version__)
 
 cats_train_path = '/home/psaid/Work/SOEN487-ResoluteLeopards/ml_api/cats/'
-cats_test_path = '/home/psaid/Work/SOEN487-ResoluteLeopards/ml_api/lel/cats/'
+cats_test_path = '/home/psaid/Work/SOEN487-ResoluteLeopards/ml_api/cats_test/'
 dogs_train_path = '/home/psaid/Work/SOEN487-ResoluteLeopards/ml_api/dogs/'
-dogs_test_path = '/home/psaid/Work/SOEN487-ResoluteLeopards/ml_api/lel/dogs/'
+dogs_test_path = '/home/psaid/Work/SOEN487-ResoluteLeopards/ml_api/dogs_test/'
 
 from os import listdir
 from os.path import isfile, join
 
 class_names = ['Cat', 'Dog']
 
-photo_size = [56, 56]
+photo_size = [96, 96]
 
 
 # photo_size = [16, 16]
@@ -66,20 +66,19 @@ def path_to_dataset(paths, path_labels):
 
 
 # train_images, train_labels = path_to_dataset([cats_train_path, dogs_train_path], [0, 1])
-# test_images, test_labels = path_to_dataset([cats_test_path, dogs_test_path], [0, 1])
+test_images, test_labels = path_to_dataset([dogs_test_path, cats_test_path], [1, 0])
 #
 # train_images = [train_image / 255.0 for train_image in train_images]
-# test_images = [test_image / 255.0 for test_image in test_images]
+test_images = [test_image / 255.0 for test_image in test_images]
 #
 # train_images = tf.stack(train_images)
-# test_images = tf.stack(test_images)
+test_images = tf.stack(test_images)
 
 
 #
 # IMG_SHAPE = (photo_size[0], photo_size[1], 3)
 
 
-# predictions = model.predict(test_images)
 
 
 def plot_image(i, predictions_array, true_label, img):
@@ -115,17 +114,19 @@ def plot_value_array(i, predictions_array, true_label):
     thisplot[true_label].set_color('blue')
 
 
-# for i in range(10):
-#     plt.figure(figsize=(6,3))
-#     plt.subplot(1,2,1)
-#     plot_image(i, predictions, test_labels, test_images)
-#     plt.subplot(1,2,2)
-#     plot_value_array(i, predictions,  test_labels)
-#     plt.show()
-
-
 model = tf.keras.models.load_model('./cat_dog_classifier')
 
+predictions = model.predict(test_images)
+print(predictions)
+
+
+for i in range(10):
+    plt.figure(figsize=(6,3))
+    plt.subplot(1,2,1)
+    plot_image(i, predictions, test_labels, test_images)
+    plt.subplot(1,2,2)
+    plot_value_array(i, predictions,  test_labels)
+    plt.show()
 
 def predict_image(path):
     image = load_image(path)
@@ -133,8 +134,8 @@ def predict_image(path):
     return predictions[0][1]
 
 
-prediction = predict_image('/home/psaid/Work/SOEN487-ResoluteLeopards/ml_api/lel/cats/cat.3550.jpg')
-print(prediction)
+# prediction = predict_image('/home/psaid/Work/SOEN487-ResoluteLeopards/ml_api/lel/cats/cat.3550.jpg')
+# print(prediction)
 
 # test_loss, test_acc = model.evaluate(test_images, test_labels)
 
