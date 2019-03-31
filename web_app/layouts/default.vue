@@ -45,33 +45,35 @@
             </nuxt-link>
           </div>
 
-          <div class="navbar-item">
-            <night-mode/>
-          </div>
-
-          <div v-if="isLogged" class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link is-arrowless">
-              <avatar style="margin-right:10px" :size="40" :username="userName"/>
-              <span>{{userName}}</span>
-            </a>
-
-            <div class="navbar-dropdown" :class="{'mobile-active-is-dark' : theme === 'dark'}">
-              <nuxt-link to="/Profile">
-                <a style="padding-right:0px" class="navbar-item">Profile</a>
-              </nuxt-link>
-
-              <a style="padding-right:0px" class="navbar-item" @click="logout">Logout</a>
+          <no-ssr>
+            <div class="navbar-item">
+              <night-mode/>
             </div>
-          </div>
 
-          <div v-else class="navbar-item">
-            <div class="buttons">
-              <nuxt-link to="/register" class="button is-primary">
-                <strong>Sign up</strong>
-              </nuxt-link>
-              <nuxt-link to="/login" class="button is-light">Log in</nuxt-link>
+            <div v-if="isLogged" class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link is-arrowless">
+                <avatar style="margin-right:10px" :size="40" :username="userName"/>
+                <span>{{userName}}</span>
+              </a>
+
+              <div class="navbar-dropdown" :class="{'mobile-active-is-dark' : theme === 'dark'}">
+                <nuxt-link to="/Profile">
+                  <a style="padding-right:0px" class="navbar-item">Profile</a>
+                </nuxt-link>
+
+                <a style="padding-right:0px" class="navbar-item" @click="logout">Logout</a>
+              </div>
             </div>
-          </div>
+
+            <div v-else class="navbar-item">
+              <div class="buttons">
+                <nuxt-link to="/register" class="button is-primary">
+                  <strong>Sign up</strong>
+                </nuxt-link>
+                <nuxt-link to="/login" class="button is-light">Log in</nuxt-link>
+              </div>
+            </div>
+          </no-ssr>
         </div>
       </div>
     </nav>
