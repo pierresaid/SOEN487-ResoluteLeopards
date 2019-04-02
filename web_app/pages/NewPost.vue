@@ -133,7 +133,6 @@ export default {
     ...mapActions({ create: 'post/Create' }),
     async predictImages() {
       let executor_one = () => {}
-      let executor_two = () => {}
       this.predict_load = true
       try {
         const res1 = await predictUrl(this.url_one)
