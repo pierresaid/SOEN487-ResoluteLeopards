@@ -8,7 +8,7 @@
 
 <script>
 import Post from '~/components/post.vue'
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -16,12 +16,12 @@ export default {
   },
   computed: {
     ...mapState({
-      postAreFetched: state => state.post.fetchedPosts
-    }),
-    ...mapGetters({ posts: 'post/formated_posts' })
+      posts: state => state.post.posts
+      // postAreFetched: state => state.post.fetchedPosts
+    })
   },
   created() {
-    if (!this.postAreFetched) this.$store.dispatch('post/GetPosts')
+    if (this.posts.length === 0) this.$store.dispatch('post/GetPosts')
   }
 }
 </script>

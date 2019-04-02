@@ -86,13 +86,13 @@ export default {
   },
   data() {
     return {
-      title: '',
-      url_one: null,
-      // 'https://external-preview.redd.it/ip9lE3gl99wGfqNDP2EF9Y5wpV2DOs8FyKshS42DPsI.jpg?width=640&crop=smart&auto=webp&s=3c8b859244df8c6ba6c864b97a5e06230ed3fdba',
+      title: 'Hey',
+      url_one:
+        'https://external-preview.redd.it/ip9lE3gl99wGfqNDP2EF9Y5wpV2DOs8FyKshS42DPsI.jpg?width=640&crop=smart&auto=webp&s=3c8b859244df8c6ba6c864b97a5e06230ed3fdba',
       img_one_err: true,
       img_one_prediction: null,
-      url_two: null,
-      // 'https://preview.redd.it/95sxcsunerp21.jpg?width=640&crop=smart&auto=webp&s=c455765b11111649f583b5d7e140563a641c090d',
+      url_two:
+        'https://preview.redd.it/95sxcsunerp21.jpg?width=640&crop=smart&auto=webp&s=c455765b11111649f583b5d7e140563a641c090d',
       img_two_err: true,
       img_two_prediction: null,
       predict_load: false,

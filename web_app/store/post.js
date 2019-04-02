@@ -7,25 +7,16 @@ const BaseUrl = 'http://localhost:5000/'
 
 export const state = () => ({
   posts: [],
-  votes: [],
+  // votes: [],
   fetchedPosts: false,
-  uploading: false
+  uploading: false,
+  page: 1,
+  post_per_page: 10
 })
 
-export const getters = {
-  formated_posts(state, getters, rootState) {
-    return state.posts.map(p => {
-      const userVote = state.votes.find(
-        v => v.user_id === rootState.user.id && v.post_id === p.id
-      )
-      return { user_vote: userVote !== undefined ? userVote.value : -1, ...p }
-    })
-  }
-}
-
 export const mutations = {
-  SET_FETCHED_POSTS(state) {
-    state.fetchedPosts = true
+  SET_FETCHING_POSTS(state, status) {
+    state.fetchedPosts = status
   },
   SET_POSTS(state, posts) {
     state.posts = posts
@@ -34,41 +25,56 @@ export const mutations = {
     state.posts.push(post)
   },
   ADD_POSTS(state, posts) {
-    state.posts = state.posts.concat(posts)
+    console.log('posts : ', posts)
+
+    for (let i = 0; i < posts.length; i++) {
+      state.posts.push(posts[i])
+    }
+    state.page += 1
   },
   SET_UPLOADING(state, uploading) {
     state.uploading = uploading
   },
   SET_VOTE(state, { postId, idx, userId }) {
-    let res = state.votes.find(
-      v => v.user_id === userId && v.post_id === postId
-    )
+    let res = state.posts.find(p => p.id === postId)
     if (res) {
-      res.value = idx
-    } else {
-      state.votes.push({ user_id: userId, post_id: postId, value: idx })
+      res.user_vote = idx
     }
   }
 }
 
-let DebugId = 2
 export const actions = {
-  async GetPosts({ commit }) {
+  async GetPosts({ state, commit }) {
     try {
-      let posts = await this.$axios.$get(BaseUrl + 'post/')
-      commit('ADD_POSTS', posts)
-      commit('SET_FETCHED_POSTS')
+      commit('SET_FETCHING_POSTS', true)
+      let response = await this.$axios.$get(BaseUrl + 'post/', {
+        params: {
+          // page: state.page,
+          // post_per_page: state.post_per_page
+        }
+      })
+      commit('ADD_POSTS', response.posts)
+      commit('SET_FETCHING_POSTS', false)
     } catch (error) {
+      console.log(error)
+
       ErrorNotification(error)
     }
   },
   async Create({ commit }, post) {
     commit('SET_UPLOADING', true)
-    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await sleep(500)
-    commit('ADD_POST', { id: DebugId, ...post })
-    ++DebugId
-    SuccessNotification('Upload successful')
+    try {
+      let response = await this.$axios.post(BaseUrl + 'post/', {
+        title: post.title,
+        url_one: post.url_one,
+        url_two: post.url_two
+      })
+      commit('ADD_POST', response.data.post)
+      SuccessNotification('Upload successful')
+    } catch (error) {
+      ErrorNotification(error)
+    }
+
     commit('SET_UPLOADING', false)
   },
   async Vote({ commit, rootState }, { postId, idx }) {
