@@ -35,12 +35,14 @@ def get_post_by_id(post_id: int):
         return jsonify({'code': 404, 'error': f'Post with id {post_id}, cannot be found'})
 
 
-@app.route('/post', methods={'PUT'})
+@app.route('/post/', methods={'POST'})
 def put_new_post():
+    data = request.get_json()
+
     params = {
-        'url_one': request.form.get('cat'),
-        'url_two': request.form.get('dog'),
-        'title': request.form.get('title')
+        'url_one': data['url_one'],
+        'url_two': data['url_two'],
+        'title': data['title']
     }
 
     p = Post(**params)
@@ -50,5 +52,5 @@ def put_new_post():
     except exc.IntegrityError:
         error = 'wrong parameters sent\n'
         return make_response(jsonify({"code": 400, "error": error}), 400)
-    return make_response(jsonify({"code": 200, "msg": f"{p}"}), 200)
+    return make_response(jsonify({"code": 200, "post": row2dict(p)}), 200)
 
