@@ -9,26 +9,36 @@
         <b-field label="Your Dog Picture" style="width:100%;" :class="theme">
           <c-input v-model="url_one" placeholder="Dog Picture Url" style="width: 100%;" icon="dog"/>
         </b-field>
-        <div style="display:flex; align-items: center;">
+        <div style="display:flex; align-items: center; flex-direction: column;">
           <img
             v-show="img_one_show"
             :src="url_one"
             @load="img_one_err = false"
             @error="img_one_err = true"
           >
-          <p v-show="img_one_prediction !== null" style="margin-left:25px;">{{img_one_prediction}}</p>
+          <p v-if="img_one_prediction !== null" style="margin:25px;">{{img_one_prediction}}</p>
+          <p
+            v-else-if="one_err_message !== null"
+            style="margin:25px; color:hsl(348, 100%, 61%)"
+          >{{one_err_message}}</p>
+          <span v-else style="margin:25px;"/>
         </div>
         <b-field label="Your Cat Picture" style="width:100%;" :class="theme">
           <c-input v-model="url_two" placeholder="Cat Picture Url" style="width: 100%;" icon="cat"/>
         </b-field>
-        <div style="display:flex; align-items: center;">
+        <div style="display:flex; align-items: center; flex-direction: column">
           <img
             v-show="img_two_show"
             :src="url_two"
             @load="img_two_err = false"
             @error="img_two_err = true"
           >
-          <p v-show="img_two_prediction !== null" style="margin-left:25px;">{{img_two_prediction}}</p>
+          <p v-if="img_two_prediction !== null" style="margin:25px;">{{img_two_prediction}}</p>
+          <p
+            v-else-if="two_err_message !== null"
+            style="margin:25px; color:hsl(348, 100%, 61%)"
+          >{{two_err_message}}</p>
+          <span v-else style="margin:25px;"/>
         </div>
         <b-field style="margin-top:10px; width:100%;" class="is-grouped" :class="theme">
           <button
@@ -59,6 +69,7 @@ import { mapState, mapActions } from 'vuex'
 import box from '~/components/box'
 import input from '~/components/input'
 import predictUrl from '~/services/prediction'
+import { ErrorNotification } from '../helpers/Notifications'
 
 export default {
   components: {
@@ -75,7 +86,9 @@ export default {
       img_two_err: true,
       img_two_prediction: null,
       predict_load: false,
-      swap: false
+      swap: false,
+      one_err_message: null,
+      two_err_message: null
     }
   },
   computed: {
@@ -110,11 +123,26 @@ export default {
     ...mapActions({ create: 'post/Create' }),
     async predictImages() {
       this.predict_load = true
-      const res1 = await predictUrl(this.url_one)
-      const res2 = await predictUrl(this.url_two)
-      this.img_one_prediction = `This look like a ${res1}`
-      this.img_two_prediction = `This look like a ${res2}`
-      if (res1 === 'cat' && res2 === 'dog') {
+      try {
+        const res1 = await predictUrl(this.url_one)
+        this.img_one_prediction = `This look like a ${res1}`
+        this.one_err_message = null
+        try {
+          var res2 = await predictUrl(this.url_two)
+          this.img_two_prediction = `This look like a ${res2}`
+          this.two_err_message = null
+        } catch (error) {
+          this.one_err_message = error
+          ErrorNotification(error)
+        }
+      } catch (error) {
+        this.two_err_message = error
+        ErrorNotification(error)
+      }
+      if (
+        this.img_one_prediction === 'cat' &&
+        this.img_two_prediction === 'dog'
+      ) {
         this.swap = true
       }
       this.predict_load = false

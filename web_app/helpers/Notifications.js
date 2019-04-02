@@ -10,11 +10,14 @@ export function SuccessNotification(message = 'Success', duration = 2000) {
 
 export function ErrorNotification(error, duration = 2000) {
   Toast.open({
-    message: error.response
-      ? error.response.data.msg
-      : error.message === undefined || error.message === null
-        ? 'Error'
-        : error.message,
+    message:
+      error.response && error.response.data && error.response.data.msg
+        ? error.response.data.msg
+        : error.message === undefined || error.message === null
+          ? error === null || error === undefined || typeof error !== 'string'
+            ? 'Error'
+            : error
+          : error.message,
     type: 'is-danger',
     duration: duration
   })
