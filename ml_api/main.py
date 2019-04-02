@@ -22,8 +22,9 @@ def predict_for_url():
     url = request.args.get('url')
     if not url:
         return make_response(jsonify({"message": 'Missing url'}), 400)
-    prediction = predict_image(url, model)
-    if prediction == -1:
+    try:
+        prediction = predict_image(url, model)
+    except Exception:
         return make_response(jsonify({"message": 'Invalid url'}), 400)
     return make_response(jsonify({"prediction": 'cat' if prediction < 0.5 else 'dog'}), 200)
 
