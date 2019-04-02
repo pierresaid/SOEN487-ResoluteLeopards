@@ -13,15 +13,18 @@
           <img
             v-show="img_one_show"
             :src="url_one"
-            @load="img_one_err = false"
-            @error="img_one_err = true"
+            @load="img_one_err = false; img_one_prediction = null"
+            @error="img_one_err = true; img_one_prediction = null"
           >
-          <p v-if="img_one_prediction !== null" style="margin:25px;">{{img_one_prediction}}</p>
-          <p
-            v-else-if="one_err_message !== null"
-            style="margin:25px; color:hsl(348, 100%, 61%)"
-          >{{one_err_message}}</p>
-          <span v-else style="margin:25px;"/>
+          <span style="height:10px; margin:25px;">
+            <transition enter-active-class="animated fadeInDown" mode="out-in">
+              <p v-if="img_one_prediction !== null">{{img_one_prediction}}</p>
+              <p
+                v-else-if="one_err_message !== null"
+                style="color:hsl(348, 100%, 61%)"
+              >{{one_err_message}}</p>
+            </transition>
+          </span>
         </div>
         <b-field label="Your Cat Picture" style="width:100%;" :class="theme">
           <c-input v-model="url_two" placeholder="Cat Picture Url" style="width: 100%;" icon="cat"/>
@@ -30,15 +33,18 @@
           <img
             v-show="img_two_show"
             :src="url_two"
-            @load="img_two_err = false"
-            @error="img_two_err = true"
+            @load="img_two_err = false; img_two_prediction = null"
+            @error="img_two_err = true; img_two_prediction = null"
           >
-          <p v-if="img_two_prediction !== null" style="margin:25px;">{{img_two_prediction}}</p>
-          <p
-            v-else-if="two_err_message !== null"
-            style="margin:25px; color:hsl(348, 100%, 61%)"
-          >{{two_err_message}}</p>
-          <span v-else style="margin:25px;"/>
+          <span style="height:10px; margin:25px;">
+            <transition enter-active-class="animated fadeInDown" mode="out-in">
+              <p v-if="img_two_prediction !== null">{{img_two_prediction}}</p>
+              <p
+                v-else-if="two_err_message !== null"
+                style="color:hsl(348, 100%, 61%)"
+              >{{two_err_message}}</p>
+            </transition>
+          </span>
         </div>
         <b-field style="margin-top:10px; width:100%;" class="is-grouped" :class="theme">
           <button
@@ -71,6 +77,8 @@ import input from '~/components/input'
 import predictUrl from '~/services/prediction'
 import { ErrorNotification } from '../helpers/Notifications'
 
+import 'animate.css'
+
 export default {
   components: {
     box,
@@ -80,9 +88,11 @@ export default {
     return {
       title: '',
       url_one: null,
+      // 'https://external-preview.redd.it/ip9lE3gl99wGfqNDP2EF9Y5wpV2DOs8FyKshS42DPsI.jpg?width=640&crop=smart&auto=webp&s=3c8b859244df8c6ba6c864b97a5e06230ed3fdba',
       img_one_err: true,
       img_one_prediction: null,
       url_two: null,
+      // 'https://preview.redd.it/95sxcsunerp21.jpg?width=640&crop=smart&auto=webp&s=c455765b11111649f583b5d7e140563a641c090d',
       img_two_err: true,
       img_two_prediction: null,
       predict_load: false,
@@ -122,15 +132,21 @@ export default {
   methods: {
     ...mapActions({ create: 'post/Create' }),
     async predictImages() {
+      let executor_one = () => {}
+      let executor_two = () => {}
       this.predict_load = true
       try {
         const res1 = await predictUrl(this.url_one)
-        this.img_one_prediction = `This look like a ${res1}`
-        this.one_err_message = null
+        executor_one = () => {
+          this.img_one_prediction = `This look like a ${res1}`
+          this.one_err_message = null
+        }
+
         try {
           var res2 = await predictUrl(this.url_two)
           this.img_two_prediction = `This look like a ${res2}`
           this.two_err_message = null
+          executor_one()
         } catch (error) {
           this.one_err_message = error
           ErrorNotification(error)
@@ -140,8 +156,8 @@ export default {
         ErrorNotification(error)
       }
       if (
-        this.img_one_prediction === 'cat' &&
-        this.img_two_prediction === 'dog'
+        this.img_one_prediction.indexOf('cat') !== -1 &&
+        this.img_two_prediction.indexOf('dog') !== -1
       ) {
         this.swap = true
       }
