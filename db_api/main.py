@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, make_response
+from flask_cors import CORS
 
 from config import DevConfig
 
 app = Flask(__name__)
+CORS(app)
 app.config.from_object(DevConfig)
 
 from views import user, post, vote
