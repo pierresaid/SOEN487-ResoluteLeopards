@@ -18,12 +18,10 @@ def get_all_post():
         return jsonify({'code': 200, 'posts': [row2dict(p) for p in posts]})
 
     try:
-        posts = [posts[i: i+page_size] for i in range(0, posts.count(), int(page_size))][int(page)]
-        return jsonify({'code': 200, 'posts': posts})
+        posts = [posts[i: i + int(page_size)] for i in range(0, posts.count(), int(page_size))][int(page)]
+        return jsonify({'code': 200, 'posts': [row2dict(i) for i in posts]})
     except IndexError:
         return make_response(jsonify({'code': 400, 'error': 'parameter page exceeds the number of pages'}))
-
-
 
 
 @app.route('/post/<post_id>', methods={'GET'})
@@ -35,9 +33,9 @@ def get_post_by_id(post_id: int):
         return jsonify({'code': 404, 'error': f'Post with id {post_id}, cannot be found'})
 
 
-@app.route('/post/', methods={'POST'})
+@app.route('/post/', methods={'PUT'})
 def put_new_post():
-    data = request.get_json()
+    data = request.form
 
     params = {
         'url_one': data['url_one'],
