@@ -6,3 +6,5 @@ kill `lsof -t -i:5000`
 kill `lsof -t -i:5003`
 
 kill `lsof -t -i:5002`
+
+kill `lsof -t -i:3000`
