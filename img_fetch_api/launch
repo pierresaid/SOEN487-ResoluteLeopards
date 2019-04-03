@@ -1,5 +1,7 @@
-. ../venv/bin/activate
-
 export FLASK_APP="main.py"
 export FLASK_ENV=production
-flask run --host 0.0.0.0 --port 5003
+
+export PIPENV_VENV_IN_PROJECT=1
+
+pipenv install
+pipenv run flask run --host 0.0.0.0 --port 5003
