@@ -1,8 +1,8 @@
 import sqlalchemy
-from flask import Blueprint, request
-from flask import jsonify
+from flask import Blueprint, request, jsonify, g
 from exceptions import ApiError
 from werkzeug.exceptions import BadRequestKeyError
+from decorators import accept_fields, require_fields, hash_password_field
 
 from models import User, db
 from helpers.user import create_new_user, hash_password
@@ -46,22 +46,14 @@ def get_user_complete(user_mail):
 
 
 @bp.route("/<user_id>", methods=['PUT'])
+@accept_fields("name", "mail", "password")
+@hash_password_field
 def update_user(user_id):
-    # Obtain supported form data
-    form = filter_empty({
-        "name": request.form.get("name", None),
-        "mail": request.form.get("mail", None),
-        "password": request.form.get("password", None),
-    })
-    if "password" in form:
-        form["pwdhash"] = hash_password(form["password"])
-        del form["password"]
-
     user = User.query.filter_by(id=user_id).first()
     if user:
         # Update existing user
         try:
-            user.update(form)
+            user.update(g.data)
             db.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as e:
             print(e)
@@ -71,7 +63,7 @@ def update_user(user_id):
     else:
         # Create new user at id
         try:
-            user = User(id=user_id, **form)
+            user = User(id=user_id, **g.data)
             db.session.add(user)
             db.session.commit()
         except BadRequestKeyError:
@@ -82,9 +74,10 @@ def update_user(user_id):
 
 
 @bp.route("/", methods=['POST'])
+@require_fields("name", "mail", "password")
 def add_user():
     try:
-        added_user = create_new_user(request.form.get("name"), request.form.get("mail"), request.form.get("password"))
+        added_user = create_new_user(**g.data)
     except ApiError as e:
         return jsonify({"code": e.code, "msg": e.msg}), e.code
     return jsonify(added_user.export_public())
