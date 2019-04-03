@@ -6,9 +6,22 @@
         <b-field label="Title" :class="theme">
           <b-input v-model="title" placeholder="Title"/>
         </b-field>
-        <b-field label="Your Dog Picture" style="width:100%;" :class="theme">
-          <c-input v-model="url_one" placeholder="Dog Picture Url" style="width: 100%;" icon="dog"/>
-        </b-field>
+        <p class="label">You Dog Picture</p>
+        <span style="margin-bottom:10px;display:flex">
+          <c-input
+            v-model="url_one"
+            placeholder="Dog Picture Url"
+            style="width: 100%; margin-right:5px"
+            icon="dog"
+          />
+          <button
+            style
+            class="control button is-info"
+            :class="{'is-loading' : loading_random_dog}"
+            :disabled="loading_random_dog"
+            @click="getRandomDog"
+          >Get random Dog</button>
+        </span>
         <div style="display:flex; align-items: center; flex-direction: column;">
           <img
             v-show="img_one_show"
@@ -26,9 +39,22 @@
             </transition>
           </span>
         </div>
-        <b-field label="Your Cat Picture" style="width:100%;" :class="theme">
-          <c-input v-model="url_two" placeholder="Cat Picture Url" style="width: 100%;" icon="cat"/>
-        </b-field>
+        <p class="label">You Cat Picture</p>
+        <span style="margin-bottom:10px;display:flex">
+          <c-input
+            v-model="url_two"
+            placeholder="Cat Picture Url"
+            style="width: 100%; margin-right:5px"
+            icon="cat"
+          />
+          <button
+            style
+            class="control button is-info"
+            :class="{'is-loading' : loading_random_cat}"
+            :disabled="loading_random_cat"
+            @click="getRandomCat"
+          >Get random Cat</button>
+        </span>
         <div style="display:flex; align-items: center; flex-direction: column">
           <img
             v-show="img_two_show"
@@ -75,6 +101,7 @@ import { mapState, mapActions } from 'vuex'
 import box from '~/components/box'
 import input from '~/components/input'
 import predictUrl from '~/services/prediction'
+import { GetRandomDogUrl, GetRandomCatUrl } from '~/services/imgFetch'
 import { ErrorNotification } from '../helpers/Notifications'
 
 import 'animate.css'
@@ -98,7 +125,9 @@ export default {
       predict_load: false,
       swap: false,
       one_err_message: null,
-      two_err_message: null
+      two_err_message: null,
+      loading_random_dog: false,
+      loading_random_cat: false
     }
   },
   computed: {
@@ -170,6 +199,26 @@ export default {
       this.img_one_prediction = this.img_two_prediction
       this.img_two_prediction = tmp
       this.swap = false
+    },
+    async getRandomDog() {
+      this.loading_random_dog = true
+      try {
+        const url = await GetRandomDogUrl()
+        this.url_one = url
+      } catch (error) {
+        ErrorNotification(error)
+      }
+      this.loading_random_dog = false
+    },
+    async getRandomCat() {
+      this.loading_random_cat = true
+      try {
+        const url = await GetRandomCatUrl()
+        this.url_two = url
+      } catch (error) {
+        ErrorNotification(error)
+      }
+      this.loading_random_cat = false
     }
   }
 }
