@@ -1,11 +1,14 @@
 import os
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from jwcrypto import jwt, jws, jwk
 from exceptions import ApiError
 from config import DevConfig
 from keys import load_keys, load_key
 
 app = Flask(__name__)
+CORS(app)
+
 app.config.from_object(DevConfig)
 
 # Signing Keys have to be loaded on start

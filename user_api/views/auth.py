@@ -11,10 +11,12 @@ ph = PasswordHasher()
 
 @bp.route("/login", methods=['POST'])
 def login():
+    data = request.get_json()
     # Validate request form
+
     mail = request.form['mail']
     password = request.form['password']
-    if not mail and not password:
+    if not mail or not password:
         return jsonify({"code": 400, "msg": "Bad Request"}), 400
 
     # Compare credentials
@@ -31,12 +33,13 @@ def login():
     tokens = create_tokens_for_user(user)
 
     # Send token to the user
-    return jsonify({"code": 200, "msg": "Success", **tokens}), 200
+    return jsonify({"code": 200, "msg": "Success", **tokens, "id": user.id}), 200
 
 
 @bp.route("/register", methods=['POST'])
 def register():
     try:
+        data = request.get_json()
         # Create the new user
         user = create_new_user(request.form.get("name"), request.form.get("mail"), request.form.get("password"))
     except ApiError as e:
@@ -45,7 +48,7 @@ def register():
     tokens = create_tokens_for_user(user)
 
     # Send token to the user
-    return jsonify({"code": 200, "msg": "Success", **tokens}), 200
+    return jsonify({"code": 200, "msg": "Success", **tokens, "id" : user.id}), 200
 
 
 @bp.route("/token/<refresh_token>", methods=['GET'])
