@@ -123,7 +123,6 @@ export default {
       img_two_err: true,
       img_two_prediction: null,
       predict_load: false,
-      swap: false,
       one_err_message: null,
       two_err_message: null,
       loading_random_dog: false,
@@ -141,6 +140,14 @@ export default {
         url_one: this.url_one,
         url_two: this.url_two
       }
+    },
+    swap() {
+      return (
+        this.img_one_prediction !== null &&
+        this.img_one_prediction.indexOf('cat') !== -1 &&
+        this.img_two_prediction !== null &&
+        this.img_two_prediction.indexOf('dog') !== -1
+      )
     },
     FormHasError() {
       return (
@@ -182,12 +189,6 @@ export default {
       } catch (error) {
         this.two_err_message = error
         ErrorNotification(error)
-      }
-      if (
-        this.img_one_prediction.indexOf('cat') !== -1 &&
-        this.img_two_prediction.indexOf('dog') !== -1
-      ) {
-        this.swap = true
       }
       this.predict_load = false
     },
