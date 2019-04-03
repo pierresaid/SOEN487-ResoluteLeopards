@@ -45,6 +45,10 @@ The APIS are used by the front-end of our application, which is developed using 
 ## Installation
 
 ## Execution
+* On unix
+    * Launch all API's and web ap with : ./launch
+    * To kill all processes : ./killall
+
 
 ## Contributors
 
