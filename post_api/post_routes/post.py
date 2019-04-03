@@ -7,7 +7,7 @@ from utils import row2dict
 post_blueprint = Blueprint('post', __name__)
 
 
-@app.route('/post/', methods={'GET'})
+@app.route('/post', methods={'GET'})
 def get_all_post():
     page_size = request.args.get('post_per_page')
     page = request.args.get('page')
@@ -33,15 +33,19 @@ def get_post_by_id(post_id: int):
         return jsonify({'code': 404, 'error': f'Post with id {post_id}, cannot be found'})
 
 
-@app.route('/post/', methods={'PUT'})
+@app.route('/post', methods={'PUT'})
 def put_new_post():
     data = request.form
 
-    params = {
-        'url_one': data['url_one'],
-        'url_two': data['url_two'],
-        'title': data['title']
-    }
+    try:
+        params = {
+            'author_id': data['user_id'],
+            'url_one': data['url_one'],
+            'url_two': data['url_two'],
+            'title': data['title']
+        }
+    except:
+        return make_response(jsonify({'code': 400, 'error': 'Badly formed request, parameters are missing'}))
 
     p = Post(**params)
     db.session.add(p)
