@@ -18,7 +18,7 @@ def get_all_post():
         return jsonify({'code': 200, 'posts': [row2dict(p) for p in posts]})
 
     try:
-        posts = [posts[i: i+page_size] for i in range(0, len(posts), page_size)][page]
+        posts = [posts[i: i+page_size] for i in range(0, posts.count(), int(page_size))][int(page)]
         return jsonify({'code': 200, 'posts': posts})
     except IndexError:
         return make_response(jsonify({'code': 400, 'error': 'parameter page exceeds the number of pages'}))
