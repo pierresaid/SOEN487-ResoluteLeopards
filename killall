@@ -1,0 +1,10 @@
+#!/bin/bash                                                                                          
+kill `sudo lsof -t -i:5001`
+
+kill `sudo lsof -t -i:5000`
+
+kill `sudo lsof -t -i:5003`
+
+kill `sudo lsof -t -i:5002`
+
+kill `sudo lsof -t -i:3000`

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+cd ./user_api
+./launch&
+cd ..
+
+cd ./post_api
+./launch&
+cd ..
+
+cd ./img_fetch_api
+./launch&
+cd ..
+
+cd ./ml_api
+./launch&
+cd ..
+
+
+cd ./web_app
+./justlaunch&
+cd ..
