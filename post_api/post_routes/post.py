@@ -33,9 +33,9 @@ def get_post_by_id(post_id: int):
         return jsonify({'code': 404, 'error': f'Post with id {post_id}, cannot be found'})
 
 
-@app.route('/post', methods={'PUT'})
+@app.route('/post', methods={'POST'})
 def put_new_post():
-    data = request.form
+    data = request.get_json()
 
     try:
         params = {
