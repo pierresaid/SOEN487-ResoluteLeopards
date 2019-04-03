@@ -1,20 +1,29 @@
 import sqlalchemy
-from flask import Blueprint, make_response, request
+from flask import Blueprint, request
 from flask import jsonify
+from exceptions import ApiError
 from werkzeug.exceptions import BadRequestKeyError
 
-from main import app
-from models import User, row2dict, db
+from models import User, db
+from helpers.user import create_new_user, hash_password
 
 bp = Blueprint('user', __name__, url_prefix='/users')
 
 
+def filter_empty(d: dict):
+    return {k: v for k, v in d.items() if v is not None}
+
+
 @bp.route("/")
-def get_all_users():
-    user_list = User.query.all()
-    user_list = [row2dict(user) for user in user_list]
-    for user in user_list:
-        del user['pwdhash']
+def get_users():
+    # Obtain supported args to filter users by
+    args = filter_empty({
+        "name": request.args.get("name", None)
+    })
+
+    # Get the list
+    user_list = User.query.filter_by(**args)
+    user_list = [user.export_public() for user in user_list]
     return jsonify(user_list)
 
 
@@ -22,73 +31,63 @@ def get_all_users():
 def get_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     if user:
-        user = row2dict(user)
-        del user['pwdhash']
-        return jsonify(user)
+        return jsonify(user.export_public())
     else:
-        return make_response(jsonify({"code": 404, "msg": "User not found"}), 404)
+        return jsonify({"code": 404, "msg": "User not found"}), 404
 
 
-@bp.route("/info/<string:user_mail>")
+@bp.route("/<string:user_mail>")
 def get_user_complete(user_mail):
     user = User.query.filter_by(mail=user_mail).first()
     if user:
-        user = row2dict(user)
-        return jsonify(user)
+        return jsonify(user.export_public())
     else:
-        return make_response(jsonify({"code": 404, "msg": "User not found"}), 404)
-
-
-@bp.route("/name/<string:user_name>")
-def get_users_by_name(user_name):
-    user_list = User.query.filter_by(name=user_name)
-    user_list = [row2dict(user) for user in user_list]
-    for user in user_list:
-        del user['pwdhash']
-    return jsonify(user_list)
+        return jsonify({"code": 404, "msg": "User not found"}), 404
 
 
 @bp.route("/<user_id>", methods=['PUT'])
 def update_user(user_id):
+    # Obtain supported form data
+    form = filter_empty({
+        "name": request.form.get("name", None),
+        "mail": request.form.get("mail", None),
+        "password": request.form.get("password", None),
+    })
+    if "password" in form:
+        form["pwdhash"] = hash_password(form["password"])
+        del form["password"]
+
     user = User.query.filter_by(id=user_id).first()
     if user:
-        if 'name' in request.form:
-            user.name = request.form['name']
+        # Update existing user
         try:
+            user.update(form)
             db.session.commit()
-            updated_user = User.query.filter_by(id=user_id).first()
         except sqlalchemy.exc.SQLAlchemyError as e:
-            error = "Cannot update user. "
-            print(app.config.get("DEBUG"))
-            if app.config.get("DEBUG"):
-                error += str(e)
-            return make_response(jsonify({"code": 404, "msg": error}), 404)
-        updated_user = row2dict(updated_user)
-        del updated_user['pwdhash']
-        return jsonify(updated_user)
+            print(e)
+            db.session.rollback()
+            return jsonify({"code": 404, "msg": "Unable to update the user"}), 404
+        return jsonify(user.export_public())
     else:
-        return make_response(jsonify({"code": 404, "msg": "User not found"}), 404)
+        # Create new user at id
+        try:
+            user = User(id=user_id, **form)
+            db.session.add(user)
+            db.session.commit()
+        except BadRequestKeyError:
+            raise ApiError(400, "missing parameters")
+        except sqlalchemy.exc.SQLAlchemyError as e:
+            return jsonify({"code": 500, "msg": "unable to persist user"}), 500
+    return jsonify(user.export_public())
 
 
 @bp.route("/", methods=['POST'])
 def add_user():
     try:
-        newUser = User(name=request.form['name'], mail=request.form['mail'], pwdhash=request.form['pwdhash'])
-    except BadRequestKeyError:
-        return make_response(jsonify({"code": 400, "msg": "missing parameters"}), 400)
-    db.session.add(newUser)
-    try:
-        db.session.commit()
-        added_user = User.query.filter_by(id=newUser.id).first()
-    except sqlalchemy.exc.SQLAlchemyError as e:
-        error = "Cannot add user."
-        print(app.config.get("DEBUG"))
-        if app.config.get("DEBUG"):
-            error += str(e)
-        return make_response(jsonify({"code": 404, "msg": error}), 404)
-    added_user = row2dict(added_user)
-    del added_user['pwdhash']
-    return jsonify(added_user)
+        added_user = create_new_user(request.form.get("name"), request.form.get("mail"), request.form.get("password"))
+    except ApiError as e:
+        return jsonify({"code": e.code, "msg": e.msg}), e.code
+    return jsonify(added_user.export_public())
 
 
 @bp.route("/<user_id>", methods=['DELETE'])
@@ -100,6 +99,6 @@ def delete_user(user_id):
             db.session.commit()
             return jsonify({"code": 200, "msg": "success"})
         except sqlalchemy.exc.IntegrityError:
-            return make_response(jsonify({"code": 400, "msg": "This user has existing votes"}), 400)
+            return jsonify({"code": 400, "msg": "Unable to delete this user"}), 400
     else:
-        return make_response(jsonify({"code": 404, "msg": "User not found"}), 404)
+        return jsonify({"code": 404, "msg": "User not found"}), 404

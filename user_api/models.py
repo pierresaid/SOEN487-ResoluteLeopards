@@ -1,6 +1,7 @@
 from main import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utc import UtcDateTime
+import json
 
 db = SQLAlchemy(app)
 
@@ -14,10 +15,21 @@ class User(db.Model):
     name = db.Column(db.Text(), nullable=False)
     mail = db.Column(db.Text(), nullable=False, unique=True)
     pwdhash = db.Column(db.Text(), nullable=False)
-    refresh_token = db.relationship('RefreshToken', backref='user', lazy=True, uselist=False)
+    refresh_token = db.relationship('RefreshToken', backref='user', lazy=True, uselist=False, cascade="all, delete-orphan")
+
+    def update(self, form):
+        for (k, v) in form.items():
+            self.__setattr__(k, v)
 
     def __repr__(self):
         return "<User {0}: {1}>".format(self.id, self.name)
+
+    def export_public(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "mail": self.mail
+        }
 
 
 class RefreshToken(db.Model):
