@@ -18,5 +18,5 @@ cd ..
 
 
 cd ./web_app
-./justlaunch&
+./launch&
 cd ..
