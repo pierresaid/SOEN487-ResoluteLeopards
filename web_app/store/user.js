@@ -48,21 +48,18 @@ export const actions = {
       let response = await this.$axios.post(BaseUrl + 'auth/register', {
         name: user.name,
         mail: user.email,
-        pwdhash: user.password
+        password: user.password
       })
-
-      const user_id = response.data.id
 
       commit('SET_TOKENS', {
         access_token: response.data.access_token,
         refresh_token: response.data.refresh_token,
-        id: user_id
+        id: response.data.user.id
       })
 
-      response = await this.$axios.get(BaseUrl + 'users/' + user_id)
       commit('SET_INFO', {
-        mail: response.data.mail,
-        name: response.data.name
+        mail: response.data.user.mail,
+        name: response.data.user.name
       })
       SuccessNotification('Welcome !')
       commit('SET_UPLOADING', false)
@@ -72,26 +69,25 @@ export const actions = {
       ErrorNotification(error)
     }
     commit('SET_UPLOADING', false)
+    return false
   },
   async Login({ commit }, user) {
     commit('SET_UPLOADING', true)
     try {
       let response = await this.$axios.post(BaseUrl + 'auth/login', {
         mail: user.email,
-        pwdhash: user.password
+        password: user.password
       })
 
-      const user_id = response.data.id
       commit('SET_TOKENS', {
         access_token: response.data.access_token,
         refresh_token: response.data.refresh_token,
-        id: user_id
+        id: response.data.user.id
       })
 
-      response = await this.$axios.get(BaseUrl + 'users/' + user_id)
       commit('SET_INFO', {
-        mail: response.data.mail,
-        name: response.data.name
+        mail: response.data.user.mail,
+        name: response.data.user.name
       })
       SuccessNotification('Welcome !')
       commit('SET_LOGGED', true)

@@ -68,7 +68,7 @@ export default {
       const res = await this.register({
         name: this.name,
         email: this.email,
-        pwdhash: this.password
+        password: this.password
       })
       if (res) this.$nuxt.$router.replace({ path: '/' })
     }
