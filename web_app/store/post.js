@@ -8,7 +8,7 @@ const BaseUrl = 'http://localhost:5000/'
 export const state = () => ({
   posts: [],
   // votes: [],
-  fetchedPosts: false,
+  fetchingPosts: false,
   uploading: false,
   page: 1,
   post_per_page: 10
@@ -16,7 +16,7 @@ export const state = () => ({
 
 export const mutations = {
   SET_FETCHING_POSTS(state, status) {
-    state.fetchedPosts = status
+    state.fetchingPosts = status
   },
   SET_POSTS(state, posts) {
     state.posts = posts
@@ -25,8 +25,6 @@ export const mutations = {
     state.posts.push(post)
   },
   ADD_POSTS(state, posts) {
-    console.log('posts : ', posts)
-
     for (let i = 0; i < posts.length; i++) {
       state.posts.push(posts[i])
     }
@@ -47,6 +45,7 @@ export const actions = {
   async GetPosts({ state, commit }) {
     try {
       commit('SET_FETCHING_POSTS', true)
+
       let response = await this.$axios.$get(BaseUrl + 'post/', {
         params: {
           // page: state.page,
@@ -56,8 +55,6 @@ export const actions = {
       commit('ADD_POSTS', response.posts)
       commit('SET_FETCHING_POSTS', false)
     } catch (error) {
-      console.log(error)
-
       ErrorNotification(error)
     }
   },

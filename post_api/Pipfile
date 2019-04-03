@@ -1,0 +1,34 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+future = "==0.17.1"
+idna = "==2.8"
+itsdangerous = "==1.1.0"
+jwcrypto = "==0.6.0"
+powerline-status = "==2.7"
+pyasn1 = "==0.4.5"
+pycparser = "==2.19"
+python-dateutil = "==2.8.0"
+python-jose = "==3.0.1"
+pytz = "==2018.9"
+requests = "==2.21.0"
+rsa = "==4.0"
+six = "==1.12.0"
+toml = "==0.10.0"
+urllib3 = "==1.24.1"
+Flask = "==1.0.2"
+Flask-SQLAlchemy = "==2.3.2"
+Jinja2 = "==2.10"
+MarkupSafe = "==1.1.0"
+SQLAlchemy = "==1.2.18"
+SQLAlchemy-Utc = "==0.10.0"
+Werkzeug = "==0.14.1"
+Flask-Cors = "*"
+
+[requires]
+python_version = "3.6"

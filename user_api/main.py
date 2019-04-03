@@ -1,11 +1,10 @@
 import os
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from jwcrypto import jwt, jws, jwk
 from exceptions import ApiError
 from config import DevConfig
 from keys import load_keys, load_key
-
-from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)

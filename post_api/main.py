@@ -1,8 +1,12 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from config import DevConfig
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+# CORS(app, resources={r"/*/*": {"origins": "*"}})
+
 db = SQLAlchemy(app)
 
 # since there is a circular dependency we have to put the import in the middle of the file
