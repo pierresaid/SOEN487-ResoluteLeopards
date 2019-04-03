@@ -1,12 +1,8 @@
 <template>
   <div>
-    <main-navbar/>
-
-    <app-container>
-      <nuxt/>
-    </app-container>
-
-    <footer-section/>
+    <h1 v-if="error.statusCode === 404">Page not found</h1>
+    <h1 v-else>An error occurred</h1>
+    <nuxt-link to="/">Home page</nuxt-link>
   </div>
 </template>
 
@@ -16,6 +12,7 @@ import appContainer from '~/components/appContainer'
 import footer from '~/components/footer'
 
 export default {
+  props: ['error'],
   components: {
     'main-navbar': navbar,
     appContainer,
@@ -33,7 +30,3 @@ export default {
   }
 }
 </script>
-
-<style>
-@import '~/assets/style.css';
-</style>
