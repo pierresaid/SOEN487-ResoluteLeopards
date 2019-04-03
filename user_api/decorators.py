@@ -70,7 +70,7 @@ def require_fields(*fields):
                     return jsonify({"code": 400, "msg": f"Bad Request, missing required field{'s' if len(missing_fields) > 1 else ''}: {', '.join(missing_fields)}"}), 400
             except Exception as e:
                 print(e)
-                return jsonify({"code": 400, "msg": "Bad Request xD"}), 400
+                return jsonify({"code": 400, "msg": "Bad Request"}), 400
             return f(*args, **kwargs)
         return wrapper
     return decorator
