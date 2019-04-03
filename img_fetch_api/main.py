@@ -1,7 +1,10 @@
 from flask import Flask, jsonify
 import requests
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 catApiUrl = "https://aws.random.cat/meow"
 dogApiUrl = "https://random.dog/woof.json"
 
