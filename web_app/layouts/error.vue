@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h1 v-if="error.statusCode === 404">Page not found</h1>
-    <h1 v-else>An error occurred</h1>
-    <nuxt-link to="/">Home page</nuxt-link>
+  <div class="full-center">
+    <h1 class="title is-1" v-if="error.statusCode === 404">Page not found</h1>
+    <h1 class="title is-1" v-else>An error occurred</h1>
+    <nuxt-link class="button is-primary" to="/">Home page</nuxt-link>
   </div>
 </template>
 
@@ -30,3 +30,14 @@ export default {
   }
 }
 </script>
+
+<style>
+.full-center {
+  display: flex;
+  align-items: center;
+  height: -webkit-fill-available;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+</style>
