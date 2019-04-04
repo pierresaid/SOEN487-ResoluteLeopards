@@ -1,7 +1,7 @@
 <template>
   <div class="full-center">
-    <h1 class="title is-1" v-if="error.statusCode === 404">Page not found</h1>
-    <h1 class="title is-1" v-else>An error occurred</h1>
+    <h1 v-if="error.statusCode === 404" class="title is-1">Page not found</h1>
+    <h1 v-else class="title is-1">An error occurred</h1>
     <nuxt-link class="button is-primary" to="/">Home page</nuxt-link>
   </div>
 </template>
@@ -12,11 +12,16 @@ import appContainer from '~/components/appContainer'
 import footer from '~/components/footer'
 
 export default {
-  props: ['error'],
   components: {
     'main-navbar': navbar,
     appContainer,
     'footer-section': footer
+  },
+  props: {
+    error: {
+      type: Number,
+      default: undefined
+    }
   },
   head() {
     return {

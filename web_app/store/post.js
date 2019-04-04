@@ -46,10 +46,10 @@ export const actions = {
     try {
       commit('SET_FETCHING_POSTS', true)
 
-      let response = await this.$axios.$get(BaseUrl + 'post/', {
+      let response = await this.$axios.$get(BaseUrl + 'post', {
         params: {
-          // page: state.page,
-          // post_per_page: state.post_per_page
+          page: state.page,
+          post_per_page: state.post_per_page
         }
       })
       commit('ADD_POSTS', response.posts)
@@ -58,13 +58,14 @@ export const actions = {
       ErrorNotification(error)
     }
   },
-  async Create({ commit }, post) {
+  async Create({ commit, rootState }, post) {
     commit('SET_UPLOADING', true)
     try {
-      let response = await this.$axios.post(BaseUrl + 'post/', {
+      let response = await this.$axios.post(BaseUrl + 'post', {
         title: post.title,
         url_one: post.url_one,
-        url_two: post.url_two
+        url_two: post.url_two,
+        user_id: rootState.user.id
       })
       commit('ADD_POST', response.data.post)
       SuccessNotification('Upload successful')

@@ -82,8 +82,6 @@
 
 <script>
 import NightMode from '~/components/NightMode'
-import appContainer from '~/components/appContainer'
-import footer from '~/components/footer'
 import { mapState, mapActions } from 'vuex'
 import Avatar from 'vue-avatar'
 
