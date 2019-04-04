@@ -21,7 +21,7 @@ def get_all_post():
         posts = [posts[i: i + int(page_size)] for i in range(0, posts.count(), int(page_size))][int(page)]
         return jsonify({'code': 200, 'posts': [row2dict(i) for i in posts]})
     except IndexError:
-        return make_response(jsonify({'code': 400, 'error': 'parameter page exceeds the number of pages'}))
+        return jsonify({'code': 200, 'end' : True, 'posts': [row2dict(i) for i in posts]})
 
 
 @app.route('/post/<post_id>', methods={'GET'})
