@@ -1,12 +1,8 @@
 <template>
-  <div>
-    <main-navbar/>
-
-    <app-container>
-      <nuxt/>
-    </app-container>
-
-    <footer-section/>
+  <div class="full-center">
+    <h1 v-if="error.statusCode === 404" class="title is-1">Page not found</h1>
+    <h1 v-else class="title is-1">An error occurred</h1>
+    <nuxt-link class="button is-primary" to="/">Home page</nuxt-link>
   </div>
 </template>
 
@@ -20,6 +16,12 @@ export default {
     'main-navbar': navbar,
     appContainer,
     'footer-section': footer
+  },
+  props: {
+    error: {
+      type: Number,
+      default: undefined
+    }
   },
   head() {
     return {
@@ -35,5 +37,12 @@ export default {
 </script>
 
 <style>
-@import '~/assets/style.css';
+.full-center {
+  display: flex;
+  align-items: center;
+  height: -webkit-fill-available;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
 </style>

@@ -7,11 +7,11 @@ const BaseUrl = 'http://localhost:5000/'
 
 export const state = () => ({
   posts: [],
-  // votes: [],
   fetchingPosts: false,
   uploading: false,
-  page: 1,
-  post_per_page: 10
+  page: 0,
+  post_per_page: 10,
+  end: false
 })
 
 export const mutations = {
@@ -38,6 +38,9 @@ export const mutations = {
     if (res) {
       res.user_vote = idx
     }
+  },
+  SET_END(state, value) {
+    state.end = value
   }
 }
 
@@ -46,25 +49,36 @@ export const actions = {
     try {
       commit('SET_FETCHING_POSTS', true)
 
-      let response = await this.$axios.$get(BaseUrl + 'post/', {
+      let response = await this.$axios.$get(BaseUrl + 'post', {
         params: {
-          // page: state.page,
-          // post_per_page: state.post_per_page
-        }
+          page: state.page,
+          post_per_page: state.post_per_page
+        },
+        progress: false
       })
-      commit('ADD_POSTS', response.posts)
+      const sleep = ms => {
+        return new Promise(resolve => setTimeout(resolve, ms))
+      }
+
+      await sleep(2000)
+      if (response.end === true) {
+        commit('SET_END', true)
+      } else {
+        commit('ADD_POSTS', response.posts)
+      }
       commit('SET_FETCHING_POSTS', false)
     } catch (error) {
       ErrorNotification(error)
     }
   },
-  async Create({ commit }, post) {
+  async Create({ commit, rootState }, post) {
     commit('SET_UPLOADING', true)
     try {
-      let response = await this.$axios.post(BaseUrl + 'post/', {
+      let response = await this.$axios.post(BaseUrl + 'post', {
         title: post.title,
         url_one: post.url_one,
-        url_two: post.url_two
+        url_two: post.url_two,
+        user_id: rootState.user.id
       })
       commit('ADD_POST', response.data.post)
       SuccessNotification('Upload successful')

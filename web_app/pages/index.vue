@@ -1,8 +1,13 @@
 <template>
-  <div>
+  <div
+    v-infinite-scroll="loadMore"
+    infinite-scroll-distance="500"
+    infinite-scroll-throttle-delay="200"
+  >
     <div class="posts-container">
-      <spinner v-if="fetchingPosts"/>
       <Post v-for="(post, index) in posts" :key="index" :post="post"/>
+      <spinner v-if="fetchingPosts" style="margin-top:15px; margin-bottom:15px"/>
+      <create-more v-if="endOfPosts && !fetchingPosts"/>
     </div>
   </div>
 </template>
@@ -10,21 +15,28 @@
 <script>
 import Post from '~/components/post.vue'
 import spinner from '~/components/spinner.vue'
+import createMore from '~/components/createMore.vue'
 import { mapState } from 'vuex'
 
 export default {
   components: {
     Post,
-    spinner
+    spinner,
+    createMore
   },
   computed: {
     ...mapState({
       posts: state => state.post.posts,
-      fetchingPosts: state => state.post.fetchingPosts
-    })
+      fetchingPosts: state => state.post.fetchingPosts,
+      endOfPosts: state => state.post.end
+    }),
+    disableLoading() {
+      return this.fetchingPosts || this.endOfPosts
+    }
   },
-  mounted() {
-    if (this.posts.length === 0 && this.fetchingPosts === false) {
+  methods: {
+    loadMore() {
+      if (this.disableLoading) return
       this.$store.dispatch('post/GetPosts')
     }
   }
