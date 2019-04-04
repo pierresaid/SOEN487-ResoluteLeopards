@@ -1,27 +1,25 @@
 <template>
-  <transition name="fade">
-    <div v-show="loaded === 2" class="box post" :class="theme">
-      <h1 class="title">{{post.title}}</h1>
-      <h2 style="color:#adadad" class="subtitle">Subtitle</h2>
-      <div style="display:flex; flex-wrap: wrap; justify-content:center; align-items: center;">
-        <img
-          class="post-picture"
-          :class="{'voted' : post.user_vote === 0}"
-          :src="post.url_one"
-          @load="OnImgLoad"
-          @click="clickVote(0)"
-        >
-        <img
-          class="post-picture"
-          :class="{'voted' : post.user_vote === 1}"
-          :src="post.url_two"
-          @load="OnImgLoad"
-          @click="clickVote(1)"
-        >
-      </div>
-      <post-votes/>
+  <div v-show="loaded === 2" class="box post" :class="theme">
+    <h1 class="title">{{post.title}}</h1>
+    <h2 style="color:#adadad" class="subtitle">Subtitle</h2>
+    <div style="display:flex; flex-wrap: wrap; justify-content:center; align-items: center;">
+      <img
+        class="post-picture"
+        :class="{'voted' : post.user_vote === 0}"
+        :src="post.url_one"
+        @load="OnImgLoad"
+        @click="clickVote(0)"
+      >
+      <img
+        class="post-picture"
+        :class="{'voted' : post.user_vote === 1}"
+        :src="post.url_two"
+        @load="OnImgLoad"
+        @click="clickVote(1)"
+      >
     </div>
-  </transition>
+    <post-votes/>
+  </div>
 </template>
 
 <script>
