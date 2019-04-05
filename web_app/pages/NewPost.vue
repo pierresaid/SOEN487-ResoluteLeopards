@@ -1,6 +1,8 @@
 <template>
   <no-ssr>
     <div style="margin-top:50px; display: flex; flex-direction:column; align-items: center;">
+      <image-browser/>
+
       <h1 class="title">Create a post</h1>
       <box style="width:50%; max-width:648px;">
         <b-field label="Title" :class="theme">
@@ -121,13 +123,15 @@ import { ErrorNotification } from '../helpers/Notifications'
 import spinner from '~/components/spinner.vue'
 
 import 'animate.css'
+import ImageBrowser from '../components/ImageBrowser.vue'
 
 export default {
   components: {
     box,
     spinner,
     'c-input': input,
-    onTop
+    onTop,
+    ImageBrowser
   },
   data() {
     return {
