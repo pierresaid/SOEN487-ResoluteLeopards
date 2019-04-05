@@ -114,3 +114,5 @@ user_api/keys/keylist.json
 /venv/
 .venv
 venv/
+
+\.vscode/

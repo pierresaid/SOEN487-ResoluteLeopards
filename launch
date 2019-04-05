@@ -16,6 +16,10 @@ cd ./ml_api
 ./launch&
 cd ..
 
+cd ./stats_api
+./launch&
+cd ..
+
 
 cd ./web_app
 ./launch&
