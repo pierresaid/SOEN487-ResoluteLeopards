@@ -142,7 +142,7 @@ import box from '~/components/box'
 import input from '~/components/input'
 import onTop from '~/components/onTop'
 import predictUrl from '~/services/prediction'
-import { GetRandomDogUrl, GetRandomCatUrl } from '~/services/imgFetch'
+// import { GetRandomDogUrl, GetRandomCatUrl } from '~/services/imgFetch'
 import { ErrorNotification } from '../helpers/Notifications'
 import spinner from '~/components/spinner.vue'
 
@@ -169,8 +169,6 @@ export default {
       predict_load: false,
       one_err_message: null,
       two_err_message: null,
-      loading_random_dog: false,
-      loading_random_cat: false,
       loading_img_one: false,
       loading_img_two: false,
       loaded_once_one: false,
@@ -184,7 +182,9 @@ export default {
       CatImages: state => state.images.cats_urls,
       DogImages: state => state.images.dogs_urls,
       fetchingDogs: state => state.images.fetchingDogs,
-      fetchingCats: state => state.images.fetchingCats
+      fetchingCats: state => state.images.fetchingCats,
+      loading_random_dog: state => state.images.fetchingRandomDog,
+      loading_random_cat: state => state.images.fetchingRandomCat
     }),
     new_post() {
       return {
@@ -231,7 +231,9 @@ export default {
     ...mapActions({
       create: 'post/Create',
       fetchMoreDogs: 'images/GetDogs',
-      fetchMoreCats: 'images/GetCats'
+      fetchMoreCats: 'images/GetCats',
+      GetRandomCatUrl: 'images/GetRandomCatUrl',
+      GetRandomDogUrl: 'images/GetRandomDogUrl'
     }),
 
     async predictImages() {
@@ -268,24 +270,10 @@ export default {
       this.img_two_prediction = tmp
     },
     async getRandomDog() {
-      this.loading_random_dog = true
-      try {
-        const url = await GetRandomDogUrl()
-        this.url_one = url
-      } catch (error) {
-        ErrorNotification(error)
-      }
-      this.loading_random_dog = false
+      this.url_one = await this.GetRandomDogUrl()
     },
     async getRandomCat() {
-      this.loading_random_cat = true
-      try {
-        const url = await GetRandomCatUrl()
-        this.url_two = url
-      } catch (error) {
-        ErrorNotification(error)
-      }
-      this.loading_random_cat = false
+      this.url_two = await this.GetRandomCatUrl()
     }
   }
 }

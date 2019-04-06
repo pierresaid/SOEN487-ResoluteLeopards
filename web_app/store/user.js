@@ -30,7 +30,9 @@ export const mutations = {
     state.isLogged = logged
   },
   SET_TOKENS(state, { access_token, refresh_token, id }) {
-    this.$axios.defaults.headers.common['Authorization'] = access_token
+    this.$axios.defaults.headers.common = {
+      Authorization: access_token
+    }
     state.access_token = access_token
     state.refresh_token = refresh_token
     state.id = id

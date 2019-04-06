@@ -32,6 +32,7 @@ module.exports = {
   */
   plugins: [
     { src: '~/plugins/localStorage.js', ssr: false },
+    { src: '~/plugins/axios.js', ssr: false },
     { src: '~/plugins/infiniteScroll.js', ssr: false },
     { src: '~/plugins/vue-masonry', ssr: false }
   ],

@@ -8,12 +8,20 @@ export const state = () => ({
   cats_urls: [],
   cats_page: 0,
   fetchingDogs: false,
-  fetchingCats: false
+  fetchingCats: false,
+  fetchingRandomDog: false,
+  fetchingRandomCat: false
 })
 
 export const mutations = {
   SET_FETCHING_DOGS(state, status) {
     state.fetchingDogs = status
+  },
+  SET_FETCHING_RANDOM_DOG(state, status) {
+    state.fetchingRandomDog = status
+  },
+  SET_FETCHING_RANDOM_CAT(state, status) {
+    state.fetchingRandomCat = status
   },
   ADD_URLS_DOGS(state, urls) {
     for (let i = 0; i < urls.length; i++) {
@@ -58,5 +66,29 @@ export const actions = {
       ErrorNotification(error)
     }
     commit('SET_FETCHING_CATS', false)
+  },
+  async GetRandomCatUrl({ commit }) {
+    let res = null
+    commit('SET_FETCHING_RANDOM_CAT', true)
+    try {
+      let response = await this.$axios.$get(`${BaseUrl}cat`)
+      res = response.url
+    } catch (error) {
+      ErrorNotification(error)
+    }
+    commit('SET_FETCHING_RANDOM_CAT', false)
+    return res
+  },
+  async GetRandomDogUrl({ commit }) {
+    let res = null
+    commit('SET_FETCHING_RANDOM_DOG', true)
+    try {
+      let response = await this.$axios.$get(`${BaseUrl}dog`)
+      res = response.url
+    } catch (error) {
+      ErrorNotification(error)
+    }
+    commit('SET_FETCHING_RANDOM_DOG', false)
+    return res
   }
 }
