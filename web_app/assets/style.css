@@ -4,6 +4,11 @@
 .dark {
   background-color: rgb(26, 26, 27);
 }
+
+.light {
+  background-color: white;
+}
+
 .app-is-dark :not(input, path) {
   color: white;
 }

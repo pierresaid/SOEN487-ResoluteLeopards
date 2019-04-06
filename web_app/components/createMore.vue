@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     goToCreate() {
-      this.$nuxt.$router.replace({ path: '/NewPost' })
+      this.$nuxt.$router.push({ path: '/NewPost' })
     }
   }
 }
