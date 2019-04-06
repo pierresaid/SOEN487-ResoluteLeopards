@@ -1,7 +1,8 @@
 <template>
   <div>
-    <main-navbar/>
-
+    <no-ssr>
+      <main-navbar/>
+    </no-ssr>
     <app-container>
       <nuxt/>
     </app-container>

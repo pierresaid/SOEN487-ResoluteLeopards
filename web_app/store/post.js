@@ -48,7 +48,6 @@ export const actions = {
   async GetPosts({ state, commit }) {
     try {
       commit('SET_FETCHING_POSTS', true)
-
       let response = await this.$axios.$get(BaseUrl + 'post', {
         params: {
           page: state.page,
