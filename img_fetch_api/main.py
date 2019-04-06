@@ -8,7 +8,7 @@ CORS(app)
 catApiUrl = "https://api.thecatapi.com/v1/images/search"
 dogApiUrl = "https://random.dog/woof.json"
 catImgurUrl = "https://api.imgur.com/3/gallery/r/cats/top/month"
-dogImgurUrl = "https://api.imgur.com/3/gallery/r/dogs/top/month"
+dogImgurUrl = "https://api.imgur.com/3/gallery/r/dogs/"
 
 
 @app.route('/')
@@ -54,6 +54,10 @@ def getRandomCatFromImgur(page):
         response = requests.get(catImgurUrl + '/' + str(page),
                                 headers={'Authorization': 'Client-ID ad9be282186217e'}).json()
         medias = response['data']
+        if page == 0 or page % 2 == 0:
+            medias = medias[:len(medias)//2]
+        else:
+            medias = medias[len(medias)//2:]
         images = [m['link'] for m in medias if m['link'].split('.')[-1] == 'jpg']
         return jsonify({"images": images})
     except:
@@ -64,9 +68,13 @@ def getRandomCatFromImgur(page):
 @app.route('/imgur/dog/<int:page>')
 def getRandomDogFromImgur(page):
     try:
-        response = requests.get(catImgurUrl + '/' + str(page),
+        response = requests.get(dogImgurUrl + '/' + str(page),
                                 headers={'Authorization': 'Client-ID ad9be282186217e'}).json()
         medias = response['data']
+        if page == 0 or page % 2 == 0:
+            medias = medias[:len(medias)//2]
+        else:
+            medias = medias[len(medias)//2:]
         images = [m['link'] for m in medias if m['link'].split('.')[-1] == 'jpg']
         return jsonify({"images": images})
     except:

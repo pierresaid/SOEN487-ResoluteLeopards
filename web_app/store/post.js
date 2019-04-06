@@ -56,11 +56,7 @@ export const actions = {
         },
         progress: false
       })
-      const sleep = ms => {
-        return new Promise(resolve => setTimeout(resolve, ms))
-      }
 
-      await sleep(2000)
       if (response.end === true) {
         commit('SET_END', true)
       } else {

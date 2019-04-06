@@ -1,10 +1,8 @@
 <template>
   <no-ssr>
     <div style="margin-top:50px; display: flex; flex-direction:column; align-items: center;">
-      <image-browser/>
-
       <h1 class="title">Create a post</h1>
-      <box style="width:50%; max-width:648px;">
+      <box style="width:80%; max-width:800px;">
         <b-field label="Title" :class="theme">
           <b-input v-model="title" placeholder="Title"/>
         </b-field>
@@ -16,14 +14,25 @@
             style="width: 100%; margin-right:5px"
             icon="dog"
           />
-
-          <button
-            style
-            class="control button is-info"
-            :class="{'is-loading' : loading_random_dog}"
-            :disabled="loading_random_dog"
-            @click="getRandomDog"
-          >Get random Dog</button>
+          <div class="field has-addons">
+            <p class="control">
+              <button
+                class="control button is-info"
+                :class="{'is-loading' : loading_random_dog}"
+                :disabled="loading_random_dog"
+                @click="getRandomDog"
+              >Get random Dog</button>
+            </p>
+            <p class="control">
+              <imgur-browser
+                v-model="url_one"
+                :images="DogImages"
+                :fetch-more-images="fetchMoreDogs"
+                :fetching="fetchingDogs"
+                title="Chose a dog"
+              />
+            </p>
+          </div>
         </b-field>
 
         <div style="display:flex; align-items: center; flex-direction: column;">
@@ -31,6 +40,7 @@
             <img
               v-show="img_one_show"
               slot="parent"
+              class="chosen-image"
               :src="url_one"
               @load="img_one_err = false; img_one_prediction = null; loading_img_one = false; loaded_once_one = true"
               @error="img_one_err = true; img_one_prediction = null; loading_img_one = false; loaded_once_one = true"
@@ -57,19 +67,33 @@
             style="width: 100%; margin-right:5px"
             icon="cat"
           />
-          <button
-            style
-            class="control button is-info"
-            :class="{'is-loading' : loading_random_cat}"
-            :disabled="loading_random_cat"
-            @click="getRandomCat"
-          >Get random Cat</button>
+
+          <div class="field has-addons">
+            <p class="control">
+              <button
+                class="control button is-info"
+                :class="{'is-loading' : loading_random_cat}"
+                :disabled="loading_random_cat"
+                @click="getRandomCat"
+              >Get random Cat</button>
+            </p>
+            <p class="control">
+              <imgur-browser
+                v-model="url_two"
+                :images="CatImages"
+                :fetch-more-images="fetchMoreCats"
+                :fetching="fetchingCats"
+                title="Chose a cat"
+              />
+            </p>
+          </div>
         </b-field>
         <div style="display:flex; align-items: center; flex-direction: column">
           <on-top>
             <img
               v-show="img_two_show"
               slot="parent"
+              class="chosen-image"
               :src="url_two"
               @load="img_two_err = false; img_two_prediction = null; loading_img_two = false; loaded_once_two = true;"
               @error="img_two_err = true; img_two_prediction = null; loading_img_two = false; loaded_once_two = true;"
@@ -123,7 +147,7 @@ import { ErrorNotification } from '../helpers/Notifications'
 import spinner from '~/components/spinner.vue'
 
 import 'animate.css'
-import ImageBrowser from '../components/ImageBrowser.vue'
+import ImgurBrowser from '../components/ImgurBrowser.vue'
 
 export default {
   components: {
@@ -131,11 +155,11 @@ export default {
     spinner,
     'c-input': input,
     onTop,
-    ImageBrowser
+    ImgurBrowser
   },
   data() {
     return {
-      title: 'Hey',
+      title: '',
       url_one: null,
       img_one_err: false,
       img_one_prediction: null,
@@ -156,7 +180,11 @@ export default {
   computed: {
     ...mapState({
       theme: state => state.user.theme,
-      uploading: state => state.post.uploading
+      uploading: state => state.post.uploading,
+      CatImages: state => state.images.cats_urls,
+      DogImages: state => state.images.dogs_urls,
+      fetchingDogs: state => state.images.fetchingDogs,
+      fetchingCats: state => state.images.fetchingCats
     }),
     new_post() {
       return {
@@ -200,7 +228,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ create: 'post/Create' }),
+    ...mapActions({
+      create: 'post/Create',
+      fetchMoreDogs: 'images/GetDogs',
+      fetchMoreCats: 'images/GetCats'
+    }),
+
     async predictImages() {
       let executor_one = () => {}
       this.predict_load = true
@@ -257,3 +290,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.chosen-image {
+  max-height: 600px;
+}
+</style>

@@ -1,11 +1,27 @@
-<template functional>
+<template>
   <div style="position: relative;">
     <slot name="parent"/>
-    <span class="on-top" style="display: flex; align-items: center; justify-content: center;">
+    <span
+      v-if="active"
+      class="on-top"
+      style="display: flex; align-items: center; justify-content: center;"
+    >
       <slot name="child"/>
     </span>
   </div>
 </template>
+
+<script>
+export default {
+  props: {
+    active: {
+      type: Boolean,
+      default: true
+    }
+  }
+}
+</script>
+
 
 <style scoped>
 .on-top {
