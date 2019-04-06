@@ -7,7 +7,9 @@
     <div class="posts-container">
       <Post v-for="(post, index) in posts" :key="index" :post="post"/>
       <spinner v-if="fetchingPosts" style="margin-top:15px; margin-bottom:15px"/>
-      <create-more v-if="endOfPosts && !fetchingPosts"/>
+      <transition enter-active-class="animated fadeInUp">
+        <create-more v-if="endOfPosts && !fetchingPosts"/>
+      </transition>
     </div>
   </div>
 </template>
