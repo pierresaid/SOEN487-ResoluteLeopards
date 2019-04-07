@@ -102,7 +102,7 @@ export const actions = {
   async Vote({ commit, state }, { postId, value }) {
     // commit('SET_UPLOADING_VOTE', true)
     try {
-      const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+      // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
       // await sleep(500)
 
       // let response = await this.$axios.put(BaseUrl + 'post ', {
