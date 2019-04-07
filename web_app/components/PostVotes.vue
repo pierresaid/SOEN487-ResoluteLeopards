@@ -5,40 +5,28 @@
       <div style="display:flex; align-items:center">
         <transition :duration="100" name="fade" mode="out-in">
           <fa
-            v-if="nbr === 1"
-            key="1"
-            class="heart"
-            :icon="['far', 'heart']"
-            @click="nbr = (nbr === 1 ? 0 : 1)"
-          />
-          <fa
-            v-else
+            v-if="post.user_vote === 0"
             key="2"
             class="heart"
             :icon="['fas', 'heart']"
-            @click="nbr = (nbr === 1 ? 0 : 1)"
+            @click="clickVote(0)"
           />
+          <fa v-else key="1" class="heart" :icon="['far', 'heart']" @click="clickVote(0)"/>
         </transition>
-        <p>{{nbr}} votes</p>
+        <p>{{post.vote_one}} votes</p>
       </div>
       <div style="display:flex; align-items:center">
         <transition :duration="100" name="fade" mode="out-in">
           <fa
-            v-if="nbr === 1"
-            key="1"
-            class="heart"
-            :icon="['far', 'heart']"
-            @click="nbr = (nbr === 1 ? 0 : 1)"
-          />
-          <fa
-            v-else
+            v-if="post.user_vote === 1"
             key="2"
             class="heart"
             :icon="['fas', 'heart']"
-            @click="nbr = (nbr === 1 ? 0 : 1)"
+            @click="clickVote(1)"
           />
+          <fa v-else key="1" class="heart" :icon="['far', 'heart']" @click="clickVote(1)"/>
         </transition>
-        <p>{{nbr}} votes</p>
+        <p>{{post.vote_two}} votes</p>
       </div>
     </div>
   </div>
@@ -46,15 +34,28 @@
 
 <script>
 import delimiter from './delimiter'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
     delimiter
   },
+  props: {
+    post: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
-    return {
-      nbr: 1,
-      show: true
+    return {}
+  },
+  methods: {
+    ...mapActions({ vote: 'post/Vote' }),
+    clickVote(idx) {
+      this.vote({
+        postId: this.post.id,
+        value: idx === this.post.user_vote ? -1 : idx
+      })
     }
   }
 }

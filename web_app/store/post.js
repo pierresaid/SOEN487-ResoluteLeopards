@@ -3,6 +3,8 @@ import {
   ErrorNotification
 } from '../helpers/Notifications'
 
+import Vue from 'vue'
+
 const BaseUrl = 'http://localhost:5000/'
 
 export const state = () => ({
@@ -33,11 +35,11 @@ export const mutations = {
   SET_UPLOADING(state, uploading) {
     state.uploading = uploading
   },
-  SET_VOTE(state, { postId, idx, userId }) {
-    let res = state.posts.find(p => p.id === postId)
-    if (res) {
-      res.user_vote = idx
-    }
+  SET_POST(state, post) {
+    let idx = state.posts.findIndex(p => {
+      return p.id === post.id
+    })
+    Vue.set(state.posts, idx, post)
   },
   SET_END(state, value) {
     state.end = value
@@ -59,6 +61,21 @@ export const actions = {
       if (response.end === true) {
         commit('SET_END', true)
       } else {
+        // DEBUG
+        const gen_name = () => {
+          const names = [
+            'Jean-Valjean',
+            'Jean-Philippe',
+            'Jean-Jean',
+            'Jean-Clement',
+            'Jean-Théo',
+            'Jean-Mohamed'
+          ]
+          return names[Math.floor((Math.random() * 100) % names.length)]
+        }
+        response.posts = response.posts.map(p => {
+          return { ...p, user_vote: -1, author_name: gen_name() }
+        })
         commit('ADD_POSTS', response.posts)
       }
       commit('SET_FETCHING_POSTS', false)
@@ -80,16 +97,47 @@ export const actions = {
     } catch (error) {
       ErrorNotification(error)
     }
-
     commit('SET_UPLOADING', false)
   },
-  async Vote({ commit, rootState }, { postId, idx }) {
-    // commit('SET_UPLOADING', true)
-    // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-    // await sleep(500)
+  async Vote({ commit, state }, { postId, value }) {
+    // commit('SET_UPLOADING_VOTE', true)
+    try {
+      const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+      // await sleep(500)
 
-    commit('SET_VOTE', { postId, idx, userId: rootState.user.id })
+      // let response = await this.$axios.put(BaseUrl + 'post ', {
+      //   title: post.title,
+      //   url_one: post.url_one,
+      //   url_two: post.url_two,
+      //   user_id: rootState.user.id
+      // })
+      let post = state.posts.find(p => {
+        return p.id == postId
+      })
+      let ze_post = { ...post }
+      let new_one = ze_post.vote_one
+      let new_two = ze_post.vote_two
+      if (ze_post.user_vote === 0 && value === 1) {
+        new_one -= 1
+        new_two += 1
+      } else if (ze_post.user_vote === 1 && value === 0) {
+        new_one += 1
+        new_two -= 1
+      } else {
+        new_one +=
+          value === 0 ? 1 : value === -1 && ze_post.user_vote === 0 ? -1 : 0
+        new_two +=
+          value === 1 ? 1 : value === -1 && ze_post.user_vote === 1 ? -1 : 0
+      }
+      ze_post.user_vote = value
+      ze_post.vote_one = new_one
+      ze_post.vote_two = new_two
 
-    // commit('SET_UPLOADING', false)
+      commit('SET_POST', ze_post)
+    } catch (error) {
+      ErrorNotification(error)
+    }
+
+    // commit('SET_UPLOADING_VOTE', false)
   }
 }
