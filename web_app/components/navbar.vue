@@ -37,7 +37,7 @@
         </div>
 
         <div style="margin-right:30px" class="navbar-end">
-          <div class="navbar-item">
+          <div v-if="isLogged" class="navbar-item">
             <nuxt-link to="/NewPost">
               <button class="button is-primary is-info">
                 <fa icon="plus" class="fa-lg"/>
