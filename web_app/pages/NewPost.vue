@@ -157,6 +157,7 @@ export default {
     onTop,
     ImgurBrowser
   },
+  middleware: 'auth',
   data() {
     return {
       title: '',

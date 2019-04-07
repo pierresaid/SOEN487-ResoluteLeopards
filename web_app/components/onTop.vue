@@ -1,5 +1,5 @@
 <template>
-  <div style="position: relative;">
+  <div style="position: relative; width: fit-content;">
     <slot name="parent"/>
     <span
       v-if="active"

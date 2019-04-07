@@ -27,6 +27,7 @@
     "nuxt-buefy": "^0.3.4",
     "nuxt-fontawesome": "^0.4.0",
     "vue-avatar": "^2.1.7",
+    "vue-google-charts": "^0.3.2",
     "vue-infinite-scroll": "^2.0.2",
     "vue-masonry": "^0.11.7",
     "vuex-persistedstate": "^2.5.4"
