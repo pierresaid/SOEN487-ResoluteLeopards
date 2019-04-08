@@ -80,9 +80,9 @@ class TestVote(unittest.TestCase):
         self.assertEqual(vote.post_id, 2)
         self.assertEqual(vote.value, 0)
 
-    def test_put_Vote_with_wrong_id(self):
+    def test_get_Vote_with_wrong_id(self):
         # send the request and check the response status code
-        response = self.app.put("/vote/1984651/123")
+        response = self.app.get("/vote/1984651/123")
         self.assertEqual(response.status_code, 404)
 
         # convert the response data from json and call the asserts

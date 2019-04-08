@@ -105,13 +105,13 @@ class TestPost(unittest.TestCase):
         post = json.loads(str(response.data, "utf8"))['post']
         self.assertDictEqual(post, {"id": "3", "title": "new titre", "url_one": "url1", "url_two": "url2", "author_id": "1"})
 
-    def test_put_Post_with_wrong_id(self):
+    def test_get_Post_with_wrong_id(self):
         # send the request and check the response status code
-        response = self.app.put("/post/1984651")
+        response = self.app.get("/post/1984651")
         self.assertEqual(response.status_code, 404)
 
         # convert the response data from json and call the asserts
-        body = json.loads(str(response.data, "utf8"))['post']
+        body = json.loads(str(response.data, "utf8"))
         self.assertDictEqual(body, {"code": 404, "msg": "Cannot find this post."})
 
     def test_delete_Post(self):

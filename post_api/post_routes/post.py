@@ -7,7 +7,7 @@ from utils import row2dict
 post_blueprint = Blueprint('post', __name__)
 
 # TODO: Get the user name from the user table.
-@app.route('/post', methods={'GET'})
+@post_blueprint.route('/post', methods={'GET'})
 def get_all_post():
     page_size = convert_value_or_none(request.args.get('post_per_page'))
     page = convert_value_or_none(request.args.get('page'))
@@ -48,7 +48,7 @@ def add_votes_to_post_json_list(post_list: list, user_id: int):
         post['vote_two'] = str(sum(v.value == 1 for v in vote))
 
 
-@app.route('/post/<post_id>', methods={'GET'})
+@post_blueprint.route('/post/<post_id>', methods={'GET'})
 def get_post_by_id(post_id: int):
     post = Post.query.filter_by(id=post_id).first()
     if post:
@@ -57,7 +57,7 @@ def get_post_by_id(post_id: int):
         return make_response(jsonify({'code': 404, 'msg': 'Cannot find this post.'}), 404)
 
 
-@app.route('/post/<post_id>', methods={'DELETE'})
+@post_blueprint.route('/post/<post_id>', methods={'DELETE'})
 def delete_post_by_post_id(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if post:
@@ -68,7 +68,7 @@ def delete_post_by_post_id(post_id):
         return make_response(jsonify({'code': 404, 'msg': 'Cannot find this post.'}), 404)
 
 
-@app.route('/post', methods={'POST'})
+@post_blueprint.route('/post', methods={'POST'})
 def put_new_post():
     data = request.values
 
