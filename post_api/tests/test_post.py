@@ -32,9 +32,11 @@ class TestPost(unittest.TestCase):
         # convert the response data from json and call the asserts
         Post_list = json.loads(str(response.data, "utf8"))
         self.assertEqual(type(Post_list), dict)
-        self.assertDictEqual(Post_list['posts'][0], {"id": "1", "title": "Hello", "url_one": "url1", "url_two": "url2", "author_id": '1'})
-        self.assertDictEqual(Post_list['posts'][1], {"id": "2", "title": "World", "url_one": "url1", "url_two": "url2", "author_id": '1'})
-
+        assert set({"id": "1", "title": "Hello", "url_one": "url1", "url_two": "url2", "author_id": '1'}.items())\
+            .issubset(set(Post_list['posts'][0].items()))
+        assert set({"id": "2", "title": "World", "url_one": "url1", "url_two": "url2", "author_id": '1'}.items())\
+            .issubset(set(Post_list['posts'][1].items()))
+        
     def test_get_Post_with_valid_id(self):
         # send the request and check the response status code
         response = self.app.get("/post/1")
