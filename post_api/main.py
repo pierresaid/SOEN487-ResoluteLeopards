@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from config import DevConfig
 from flask_cors import CORS
@@ -24,6 +24,11 @@ db.create_all()
 @app.route('/')
 def main_route():
     return jsonify({'code': 200, 'msg': 'You are on the post database api'})
+
+
+@app.errorhandler(404)
+def not_found_route(e):
+    return jsonify({'code': 404, 'msg': '404: Not Found'}), 404
 
 
 if __name__ == '__main__':

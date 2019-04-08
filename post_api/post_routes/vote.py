@@ -10,7 +10,7 @@ from post_models import Vote
 vote_blueprint = Blueprint('vote', __name__, url_prefix='/vote')
 
 #region GET
-@vote_blueprint.route("/", methods={'GET'})
+@vote_blueprint.route("", methods={'GET'})
 def get_all_votes():
     vote_list = Vote.query.all()
     return jsonify([row2dict(vote) for vote in vote_list])
@@ -43,6 +43,7 @@ def get_vote_for_user(user_id):
         return make_response(jsonify({"code": 404, "msg": "Cannot find this user's votes."}), 404)
 #endregion
 #region PUT/POST
+# TODO: Revove userId when we'll have the token
 @vote_blueprint.route("/<post_id>/<user_id>", methods={'PUT'})
 def update_vote(post_id, user_id):
     vote = Vote.query.filter_by(post_id=post_id, user_id=user_id).first()
@@ -72,7 +73,7 @@ def add_vote():
             'value': data['value']
         }
     except BadRequestKeyError:
-        return make_response(jsonify({"code": 400, "error": "Request is missing fields"}), 400)
+        return make_response(jsonify({"code": 400, "msg": "Request is missing fields"}), 400)
 
     new_vote = Vote(**param)
     db.session.add(new_vote)

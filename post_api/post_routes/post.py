@@ -2,50 +2,75 @@ from flask import Blueprint, request, jsonify, make_response
 from post_models import Post, Vote
 from main import db, app
 from sqlalchemy import exc
-import sqlalchemy
 from utils import row2dict
 
 post_blueprint = Blueprint('post', __name__)
 
-# TODO: Get the user name from the user table. Figure out the way to communicate between services
+# TODO: Get the user name from the user table.
 @app.route('/post', methods={'GET'})
 def get_all_post():
-    page_size = int(request.args.get('post_per_page'))
-    page = int(request.args.get('page'))
-    posts = Post.query.order_by(Post.id)
+    page_size = convert_value_or_none(request.args.get('post_per_page'))
+    page = convert_value_or_none(request.args.get('page'))
+    user_id = convert_value_or_none(request.args.get('user_id'))
+    
+    full_json_posts = [row2dict(p) for p in Post.query.order_by(Post.id)]
     if page is None or page_size is None:
-        return jsonify({'code': 200, 'posts': [row2dict(p) for p in posts]})
-
+        add_votes_to_post_json_list(full_json_posts, user_id)
+        return jsonify({'code': 200, 'posts': full_json_posts})
     try:
         """
             In this line we do the pagination. 
             range(0, posts.count() will produce a list from 0 to posts.count() by increment of page_size.
             We then use those numbers to select the page of posts we want
         """
-        posts = [posts[i: i + page_size] for i in range(0, posts.count(), page_size)]
+        posts = [full_json_posts[i: i + page_size] for i in range(0, len(full_json_posts), page_size)]
         posts = posts[page]
-        posts = [row2dict(i) for i in posts]
-        for post in posts:
-            post['vote_one'] = Vote.query.filter_by(post_id=post['id'], value=0).count()
-            post['vote_two'] = Vote.query.filter_by(post_id=post['id'], value=1).count()
-
+        add_votes_to_post_json_list(posts, user_id)
         return jsonify({'code': 200, 'posts': posts})
     except IndexError:
         return jsonify({'code': 200, 'end': True})
 
 
+def convert_value_or_none(value) -> int or None:
+    try:
+        return int(value)
+    except TypeError:
+        return None
+
+
+def add_votes_to_post_json_list(post_list: list, user_id: int):
+    for post in post_list:
+        vote = Vote.query.filter_by(post_id=post['id'], user_id=user_id)
+        if user_id:
+            user_vote = any(x.user_id == user_id for x in vote)
+            post['user_vote'] = str(int(-1 if user_vote is None else user_vote))
+        post['vote_one'] = str(sum(v.value == 0 for v in vote))
+        post['vote_two'] = str(sum(v.value == 1 for v in vote))
+
+
 @app.route('/post/<post_id>', methods={'GET'})
 def get_post_by_id(post_id: int):
-    post = Post.query.filter_by(id=post_id)
+    post = Post.query.filter_by(id=post_id).first()
     if post:
-        return jsonify({'code': 200, 'post': post})
+        return jsonify({'code': 200, 'post': row2dict(post)})
     else:
-        return jsonify({'code': 404, 'error': f'Post with id {post_id}, cannot be found'})
+        return make_response(jsonify({'code': 404, 'msg': 'Cannot find this post.'}), 404)
+
+
+@app.route('/post/<post_id>', methods={'DELETE'})
+def delete_post_by_post_id(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    if post:
+        db.session.delete(post)
+        db.session.commit()
+        return jsonify({'code': 200, 'msg': 'success'})
+    else:
+        return make_response(jsonify({'code': 404, 'msg': 'Cannot find this post.'}), 404)
 
 
 @app.route('/post', methods={'POST'})
 def put_new_post():
-    data = request.get_json()
+    data = request.values
 
     try:
         params = {
@@ -55,7 +80,7 @@ def put_new_post():
             'title': data['title']
         }
     except:
-        return make_response(jsonify({'code': 400, 'error': 'Badly formed request, parameters are missing'}))
+        return make_response(jsonify({'code': 400, 'msg': 'Badly formed request, parameters are missing'}), 400)
 
     p = Post(**params)
     db.session.add(p)
