@@ -51,7 +51,12 @@
 
           <span style="height:10px; margin:25px;">
             <transition enter-active-class="animated fadeInDown" mode="out-in">
-              <p v-if="img_one_prediction !== null">{{img_one_prediction}}</p>
+              <p v-if="img_one_prediction !== null">
+                I am
+                <b>{{img_one_prediction.percentage}}</b>
+                sure that this is a
+                <b>{{img_one_prediction.label}}</b>
+              </p>
               <p
                 v-else-if="one_err_message !== null"
                 style="color:hsl(348, 100%, 61%)"
@@ -104,7 +109,12 @@
 
           <span style="height:10px; margin:25px;">
             <transition enter-active-class="animated fadeInDown" mode="out-in">
-              <p v-if="img_two_prediction !== null">{{img_two_prediction}}</p>
+              <p v-if="img_two_prediction !== null">
+                I am
+                <b>{{img_two_prediction.percentage}}</b>
+                % sure that this is a
+                <b>{{img_two_prediction.label}}</b>
+              </p>
               <p
                 v-else-if="two_err_message !== null"
                 style="color:hsl(348, 100%, 61%)"
@@ -142,7 +152,6 @@ import box from '~/components/box'
 import input from '~/components/input'
 import onTop from '~/components/onTop'
 import predictUrl from '~/services/prediction'
-// import { GetRandomDogUrl, GetRandomCatUrl } from '~/services/imgFetch'
 import { ErrorNotification } from '../helpers/Notifications'
 import spinner from '~/components/spinner.vue'
 
@@ -197,9 +206,9 @@ export default {
     swap() {
       return (
         this.img_one_prediction !== null &&
-        this.img_one_prediction.indexOf('cat') !== -1 &&
+        this.img_one_prediction.label.indexOf('cat') !== -1 &&
         this.img_two_prediction !== null &&
-        this.img_two_prediction.indexOf('dog') !== -1
+        this.img_two_prediction.label.indexOf('dog') !== -1
       )
     },
     FormHasError() {
@@ -243,13 +252,13 @@ export default {
       try {
         const res1 = await predictUrl(this.url_one)
         executor_one = () => {
-          this.img_one_prediction = `This look like a ${res1}`
+          this.img_one_prediction = res1
           this.one_err_message = null
         }
 
         try {
           var res2 = await predictUrl(this.url_two)
-          this.img_two_prediction = `This look like a ${res2}`
+          this.img_two_prediction = res2
           this.two_err_message = null
           executor_one()
         } catch (error) {
