@@ -13,7 +13,14 @@
             <fa icon="cat" style="font-size:260px; margin-bottom:15px"/>
             <fa class="heart" :icon="[cats >= dogs ? 'fas' : 'far', 'heart']"/>
           </div>
-          <GChart type="PieChart" :data="chartData" :options="chartOptions" @ready="onChartReady"/>
+          <div style="min-width:600px; min-height:600px">
+            <GChart
+              type="PieChart"
+              :data="chartData"
+              :options="chartOptions"
+              @ready="onChartReady"
+            />
+          </div>
           <div v-show="!loading" style="display:flex; flex-direction:column; align-items:center">
             <fa icon="dog" style="font-size:260px; margin-bottom:15px"/>
             <fa class="heart" :icon="[dogs >= cats ? 'fas' : 'far', 'heart']"/>
@@ -72,7 +79,7 @@ export default {
     }
   },
   created() {
-    this.getResults()
+    if (this.cats === -1) this.getResults()
   },
   methods: {
     ...mapActions({ getResults: 'stats/getResults' }),
