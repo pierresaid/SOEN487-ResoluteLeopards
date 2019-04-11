@@ -26,6 +26,12 @@ export const mutations = {
   ADD_POST(state, post) {
     state.posts.push(post)
   },
+  POP_POST(state, postId) {
+    const idx = state.posts.findIndex(p => {
+      return p.id === postId
+    })
+    state.posts.splice(idx, 1)
+  },
   ADD_POSTS(state, posts) {
     for (let i = 0; i < posts.length; i++) {
       state.posts.push(posts[i])
@@ -98,6 +104,26 @@ export const actions = {
       ErrorNotification(error)
     }
     commit('SET_UPLOADING', false)
+  },
+
+  async removePost({ commit }, postId) {
+    commit('POP_POST', postId)
+    SuccessNotification('Update successful')
+
+    // commit('SET_UPLOADING', true)
+    // try {
+    //   let response = await this.$axios.post(BaseUrl + 'post', {
+    //     title: post.title,
+    //     url_one: post.url_one,
+    //     url_two: post.url_two,
+    //     user_id: rootState.user.id
+    //   })
+    //   commit('ADD_POST', response.data.post)
+    // SuccessNotification('Upload successful')
+    // } catch (error) {
+    //   ErrorNotification(error)
+    // }
+    // commit('SET_UPLOADING', false)
   },
   async Vote({ commit, state }, { postId, value }) {
     // commit('SET_UPLOADING_VOTE', true)
