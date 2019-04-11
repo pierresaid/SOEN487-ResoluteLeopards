@@ -26,7 +26,9 @@ def predict_for_url():
         prediction = predict_image(url, model)
     except Exception:
         return make_response(jsonify({"message": 'Invalid url'}), 400)
-    return make_response(jsonify({"prediction": 'cat' if prediction < 0.5 else 'dog'}), 200)
+    label = 'cat' if prediction < 0.5 else 'dog'
+    percent = (100 - (prediction * 100)) if label == 'cat' else (prediction * 100)
+    return make_response(jsonify({"label": label, "prediction":  f'{float(percent):.3f}'}), 200)
 
 
 if __name__ == '__main__':

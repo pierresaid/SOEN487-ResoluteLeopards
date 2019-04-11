@@ -35,9 +35,11 @@ export const actions = {
       })
 
       commit('SET_LOADING', false)
+      return null
     } catch (error) {
       ErrorNotification(error)
+      commit('SET_LOADING', false)
+      return error
     }
-    commit('SET_LOADING', false)
   }
 }
