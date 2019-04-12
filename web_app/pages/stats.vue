@@ -4,17 +4,26 @@
     <on-top :active="loading">
       <box
         slot="parent"
-        style="display:flex; min-width:600px; min-height:300px; flex-direction:column; align-items: center;"
+        style="display:flex; flex-direction:column; align-items: center;"
+        :style="`min-width : ${isMobileDevice ? 250 : 600}px; min-height : ${isMobileDevice ? 150 : 300}px`"
       >
-        <h1 style="margin-bottom:0" class="title">Total votes percentage</h1>
+        <h1 style="margin-bottom:0; text-align: center;" class="title">Total votes percentage</h1>
 
-        <div style="display:flex; align-items:center">
+        <div style="display:flex; align-items:center; flex-wrap: wrap; justify-content: center;">
           <div v-show="!loading" style="display:flex; flex-direction:column; align-items:center">
-            <fa icon="cat" style="font-size:260px; margin-bottom:15px"/>
-            <fa class="heart" :icon="[cats >= dogs ? 'fas' : 'far', 'heart']"/>
+            <span
+              style="margin-bottom:15px"
+              :style="`font-size : ${isMobileDevice ? 120 : 260}px;`"
+            >
+              <fa icon="cat"/>
+            </span>
+            <span :style="`font-size : ${isMobileDevice ? 46 : 96}px;`">
+              <fa class="heart" :icon="[cats >= dogs ? 'fas' : 'far', 'heart']"/>
+            </span>
           </div>
           <div
-            style="display: flex; align-items: center; justify-content: center; min-width:600px; min-height:600px"
+            style="display: flex; align-items: center; justify-content: center;"
+            :style="`min-width : ${isMobileDevice ? 250 : 600}px; min-height : ${isMobileDevice ? 250 : 600}px`"
           >
             <GChart
               v-show="err === null && (cats > 0 || dogs > 0)"
@@ -35,8 +44,15 @@
             <p v-if="!loading && err !== null" style="color:hsl(348, 100%, 61%)">{{err}}</p>
           </div>
           <div v-show="!loading" style="display:flex; flex-direction:column; align-items:center">
-            <fa icon="dog" style="font-size:260px; margin-bottom:15px"/>
-            <fa class="heart" :icon="[dogs >= cats ? 'fas' : 'far', 'heart']"/>
+            <span
+              style="margin-bottom:15px"
+              :style="`font-size : ${isMobileDevice ? 120 : 260}px;`"
+            >
+              <fa icon="dog"/>
+            </span>
+            <span :style="`font-size : ${isMobileDevice ? 46 : 96}px;`">
+              <fa class="heart" :icon="[cats >= dogs ? 'fas' : 'far', 'heart']"/>
+            </span>
           </div>
         </div>
       </box>
@@ -51,6 +67,7 @@ import box from '~/components/box'
 import spinner from '~/components/spinner.vue'
 import onTop from '~/components/onTop.vue'
 import { GChart } from 'vue-google-charts'
+import { isMobile } from 'mobile-device-detect'
 
 export default {
   components: {
@@ -80,16 +97,19 @@ export default {
     },
     chartOptions() {
       return {
-        width: 600,
-        height: 600,
+        width: isMobile ? 250 : 600,
+        height: isMobile ? 250 : 600,
         legend: 'none',
-        fontSize: 25,
-        pieSliceTextStyle: { fontSize: 45 },
+        fontSize: isMobile ? 15 : 25,
+        pieSliceTextStyle: { fontSize: isMobile ? 25 : 45 },
         chartArea: { width: '90%', height: '90%' },
         backgroundColor: this.theme === 'dark' ? '#1A1A1B' : 'white',
         pieSliceBorderColor: this.theme === 'dark' ? '#1A1A1B' : 'white',
         pieSliceText: 'label'
       }
+    },
+    isMobileDevice() {
+      return isMobile
     }
   },
   created() {
@@ -110,6 +130,5 @@ export default {
 <style scoped>
 .heart {
   color: #ff007e;
-  font-size: 96px;
 }
 </style>

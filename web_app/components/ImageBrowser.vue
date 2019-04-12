@@ -1,6 +1,10 @@
 <template>
   <on-top :active="disableFetching">
-    <box slot="parent" class="img-browser-container">
+    <box
+      slot="parent"
+      class="img-browser-container"
+      :style="`width : ${isMobileDevice ? 300 : 840}px;min-height : ${isMobileDevice ? 300 : 500}px;`"
+    >
       <h1 v-if="title !== null" style="text-align:center" class="title">{{title}}</h1>
       <div
         v-masonry
@@ -25,6 +29,7 @@
 import box from './box.vue'
 import spinner from '~/components/spinner.vue'
 import onTop from '~/components/onTop.vue'
+import { isMobile } from 'mobile-device-detect'
 
 export default {
   components: {
@@ -61,6 +66,9 @@ export default {
   computed: {
     disableFetching() {
       return this.fetching || this.images.length > this.loaded
+    },
+    isMobileDevice() {
+      return isMobile
     }
   },
   mounted() {
@@ -96,10 +104,6 @@ export default {
 
 .grid-item {
   margin: 5px;
-}
-.img-browser-container {
-  width: 840px;
-  min-height: 500px;
 }
 
 .masonry-container {

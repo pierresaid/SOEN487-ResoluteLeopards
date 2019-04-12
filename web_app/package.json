@@ -23,6 +23,7 @@
     "epic-spinners": "^1.0.4",
     "i": "^0.3.6",
     "masonry": "0.0.2",
+    "mobile-device-detect": "^0.2.3",
     "nuxt": "^2.4.0",
     "nuxt-buefy": "^0.3.4",
     "nuxt-fontawesome": "^0.4.0",

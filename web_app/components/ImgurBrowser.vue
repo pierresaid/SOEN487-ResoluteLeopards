@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="control button imgur-button" @click="isModalActive = true">Or browse Imgur</button>
+    <button class="control button imgur-button" @click="isModalActive = true">Or rowse Imgur</button>
     <b-modal :active.sync="isModalActive" scroll="keep">
       <image-browser
         :images="images"
@@ -48,11 +48,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .imgur-button {
   background-color: #1bb76e;
   color: white;
   font-weight: bold;
   border-color: rgb(27, 183, 110);
+}
+
+.modal-content {
+  display: flex;
+  justify-content: center;
 }
 </style>
