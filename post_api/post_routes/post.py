@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, make_response
 from post_models import Post, Vote
 from main import db, app
 from common.auth import login_required
-from sqlalchemy import exc
+from sqlalchemy import exc, desc
 from utils import row2dict
 
 post_blueprint = Blueprint('post', __name__)
@@ -14,7 +14,7 @@ def get_all_post():
     page = convert_value_or_none(request.args.get('page'))
     user_id = convert_value_or_none(request.args.get('user_id'))
     
-    full_json_posts = [row2dict(p) for p in Post.query.order_by(Post.id)]
+    full_json_posts = [row2dict(p) for p in Post.query.order_by(desc(Post.id))]
     if page is None or page_size is None:
         add_votes_to_post_json_list(full_json_posts, user_id)
         return jsonify({'code': 200, 'posts': full_json_posts})
