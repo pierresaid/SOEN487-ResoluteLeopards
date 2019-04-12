@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response
 from post_models import Post, Vote
 from main import db, app
+from common.auth import login_required
 from sqlalchemy import exc
 from utils import row2dict
 
@@ -56,8 +57,8 @@ def get_post_by_id(post_id: int):
     else:
         return make_response(jsonify({'code': 404, 'msg': 'Cannot find this post.'}), 404)
 
-
 @post_blueprint.route('/post/<post_id>', methods={'DELETE'})
+@login_required
 def delete_post_by_post_id(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if post:
@@ -90,4 +91,5 @@ def put_new_post():
         error = 'wrong parameters sent\n'
         return make_response(jsonify({"code": 400, "error": error}), 400)
     return make_response(jsonify({"code": 200, "post": row2dict(p)}), 200)
+
 

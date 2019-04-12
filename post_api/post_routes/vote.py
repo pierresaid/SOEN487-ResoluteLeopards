@@ -6,10 +6,12 @@ from werkzeug.exceptions import BadRequestKeyError
 from utils import row2dict
 from main import app, db
 from post_models import Vote
+from common.auth import login_required
 
 vote_blueprint = Blueprint('vote', __name__, url_prefix='/vote')
 
 #region GET
+
 @vote_blueprint.route("", methods={'GET'})
 def get_all_votes():
     vote_list = Vote.query.all()
@@ -41,8 +43,11 @@ def get_vote_for_user(user_id):
         return jsonify([row2dict(vote) for vote in vote_list])
     else:
         return make_response(jsonify({"code": 404, "msg": "Cannot find this user's votes."}), 404)
-#endregion
-#region PUT/POST
+
+# endregion
+
+# region PUT/POST
+
 # TODO: Revove userId when we'll have the token
 @vote_blueprint.route("/<post_id>/<user_id>", methods={'PUT'})
 def update_vote(post_id, user_id):
@@ -64,7 +69,9 @@ def update_vote(post_id, user_id):
 
 
 @vote_blueprint.route("/", methods={'POST'})
-def add_vote():
+# @login_required
+def add_or_modify_vote():
+    # TODO: Fix login required method
     try:
         data = request.form
         param = {
@@ -75,17 +82,29 @@ def add_vote():
     except BadRequestKeyError:
         return make_response(jsonify({"code": 400, "msg": "Request is missing fields"}), 400)
 
-    new_vote = Vote(**param)
-    db.session.add(new_vote)
+    vote = Vote.query.filter_by(post_id=param['post_id'], user_id=param['user_id']).first()
+    if vote:
+        try:
+            value = int(param['value'])
+            vote.value = value
+        except TypeError:
+            return make_response(jsonify({'code': 400, 'msg': 'Value provided is not an integer'}))
+    else:
+        vote = Vote(**param)
+    db.session.add(vote)
 
     try:
         db.session.commit()
     except sqlalchemy.exc.SQLAlchemyError as e:
         return make_response(jsonify({"code": 404, "msg": e}), 404)
-    return jsonify(row2dict(new_vote))
-#endregion
-#region DELETE
+    return jsonify(row2dict(vote))
+
+# endregion
+
+# region DELETE
+
 @vote_blueprint.route("/<post_id>/<user_id>", methods=['DELETE'])
+# @login_required
 def delete_vote(post_id, user_id):
     vote = Vote.query.filter_by(post_id=post_id, user_id=user_id).first()
     if vote:
@@ -94,4 +113,5 @@ def delete_vote(post_id, user_id):
         return jsonify({"code": 200, "msg": "success"})
     else:
         return make_response(jsonify({"code": 404, "msg": "Cannot find this vote."}), 404)
-#endregion
+
+# endregion
