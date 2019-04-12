@@ -73,7 +73,7 @@ def update_vote(post_id, user_id):
 def add_or_modify_vote():
     # TODO: Fix login required method
     try:
-        data = request.form
+        data = request.get_json()
         param = {
             'post_id': data['post_id'],
             'user_id': data['user_id'],

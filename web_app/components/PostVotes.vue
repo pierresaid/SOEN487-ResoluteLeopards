@@ -5,7 +5,7 @@
       <div style="display:flex; align-items:center">
         <transition :duration="100" name="fade-long" mode="out-in">
           <fa
-            v-if="post.user_vote === 0"
+            v-if="post.user_vote == 0"
             key="2"
             class="heart"
             :icon="['fas', 'heart']"
@@ -18,7 +18,7 @@
       <div style="display:flex; align-items:center">
         <transition :duration="100" name="fade-long" mode="out-in">
           <fa
-            v-if="post.user_vote === 1"
+            v-if="post.user_vote == 1"
             key="2"
             class="heart"
             :icon="['fas', 'heart']"
