@@ -5,11 +5,19 @@
     infinite-scroll-throttle-delay="200"
   >
     <div class="posts-container">
-      <Post v-for="(post, index) in posts" :key="index" :post="post"/>
+      <transition-group
+        name="list-animated"
+        style="display:flex; flex-direction:column; align-items:center"
+      >
+        <Post v-for="post in posts" :key="post.id" class="list-animated-item" :post="post"/>
+        <create-more
+          v-if="endOfPosts && !fetchingPosts"
+          key="create-more"
+          style="width: fit-content"
+          class="list-animated-item"
+        />
+      </transition-group>
       <spinner v-if="fetchingPosts" style="margin-top:15px; margin-bottom:15px"/>
-      <transition enter-active-class="animated fadeInUp">
-        <create-more v-if="endOfPosts && !fetchingPosts"/>
-      </transition>
     </div>
   </div>
 </template>
@@ -52,5 +60,18 @@ export default {
   align-items: center;
   flex-direction: column;
   justify-content: center;
+}
+
+.list-animated-item {
+  transition: opacity 1s, transform 1s;
+  margin-right: 10px;
+}
+.list-animated-enter,
+.list-animated-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.list-animated-leave-active {
+  position: absolute;
 }
 </style>

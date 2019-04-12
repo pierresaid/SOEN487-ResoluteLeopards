@@ -9,8 +9,10 @@ export default async function predictUrl(url) {
         url: url
       }
     })
-    return response.data.prediction
+    return { label: response.data.label, percentage: response.data.prediction }
   } catch (error) {
-    throw error.response.data.message
+    throw error.response !== undefined
+      ? error.response.data.message
+      : new Error('Service unreachable')
   }
 }

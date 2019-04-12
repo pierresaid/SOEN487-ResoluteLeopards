@@ -43,17 +43,23 @@ def add_votes_to_post_json_list(post_list: list, user_id: int):
     for post in post_list:
         vote = Vote.query.filter_by(post_id=post['id'], user_id=user_id)
         if user_id:
-            user_vote = any(x.user_id == user_id for x in vote)
-            post['user_vote'] = str(int(-1 if user_vote is None else user_vote))
-        post['vote_one'] = str(sum(v.value == 0 for v in vote))
-        post['vote_two'] = str(sum(v.value == 1 for v in vote))
+            user_vote = [x for x in vote if x.user_id == user_id]
+            post['user_vote'] = int(-1 if not user_vote else user_vote[0].value)
+        post['vote_one'] = int(sum(v.value == 0 for v in vote))
+        post['vote_two'] = int(sum(v.value == 1 for v in vote))
 
 
 @post_blueprint.route('/post/<post_id>', methods={'GET'})
 def get_post_by_id(post_id: int):
     post = Post.query.filter_by(id=post_id).first()
+    
+    json_post = row2dict(post)
+    user_id = convert_value_or_none(request.args.get('user_id'))
+    if user_id is not None:
+        add_votes_to_post_json_list([json_post], user_id)
+    
     if post:
-        return jsonify({'code': 200, 'post': row2dict(post)})
+        return jsonify({'code': 200, 'post': json_post})
     else:
         return make_response(jsonify({'code': 404, 'msg': 'Cannot find this post.'}), 404)
 

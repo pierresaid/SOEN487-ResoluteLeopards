@@ -13,7 +13,18 @@
             <fa icon="cat" style="font-size:260px; margin-bottom:15px"/>
             <fa class="heart" :icon="[cats >= dogs ? 'fas' : 'far', 'heart']"/>
           </div>
-          <GChart type="PieChart" :data="chartData" :options="chartOptions" @ready="onChartReady"/>
+          <div
+            style="display: flex; align-items: center; justify-content: center; min-width:600px; min-height:600px"
+          >
+            <GChart
+              v-show="err === null"
+              type="PieChart"
+              :data="chartData"
+              :options="chartOptions"
+              @ready="onChartReady"
+            />
+            <p v-if="!loading && err !== null" style="color:hsl(348, 100%, 61%)">{{err}}</p>
+          </div>
           <div v-show="!loading" style="display:flex; flex-direction:column; align-items:center">
             <fa icon="dog" style="font-size:260px; margin-bottom:15px"/>
             <fa class="heart" :icon="[dogs >= cats ? 'fas' : 'far', 'heart']"/>
@@ -41,7 +52,8 @@ export default {
   },
   data() {
     return {
-      chartReady: false
+      chartReady: false,
+      err: null
     }
   },
   computed: {
@@ -71,8 +83,8 @@ export default {
       }
     }
   },
-  created() {
-    this.getResults()
+  async created() {
+    if (this.cats === -1) this.err = await this.getResults()
   },
   methods: {
     ...mapActions({ getResults: 'stats/getResults' }),

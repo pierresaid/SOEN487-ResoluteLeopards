@@ -1,27 +1,44 @@
 <template>
-  <transition enter-active-class="animated fadeInUp">
-    <div v-show="loaded === 2" class="box post" :class="theme">
-      <h1 class="title">{{post.title}}</h1>
-      <h2 style="color:#adadad" class="subtitle">{{post.author_name}}</h2>
-      <div style="display:flex; flex-wrap: wrap; justify-content:center; align-items: center;">
-        <img
-          class="post-picture"
-          :class="{'voted' : post.user_vote === 0}"
-          :src="post.url_one"
-          @load="OnImgLoad"
-          @click="clickVote(0)"
+  <div v-show="loaded === 2" class="box post" :class="theme">
+    <div style="display:flex; width:100%; justify-content:space-between">
+      <div style="width:36px"/>
+      <h1 style="margin-bottom: 10px" class="title">{{post.title}}</h1>
+
+      <b-dropdown v-if="post.author_id == user_id" aria-role="list">
+        <button
+          slot="trigger"
+          class="button"
+          style="background-color:transparent; border-color:transparent"
         >
-        <img
-          class="post-picture"
-          :class="{'voted' : post.user_vote === 1}"
-          :src="post.url_two"
-          @load="OnImgLoad"
-          @click="clickVote(1)"
-        >
-      </div>
-      <post-votes :post="post"/>
+          <fa class="icon" icon="ellipsis-v"/>
+        </button>
+
+        <b-dropdown-item aria-role="listitem" @click="$nextTick(() => { removePost(post.id)})">
+          <fa icon="trash" style="margin-right:10px; color:red"/>Remove
+        </b-dropdown-item>
+      </b-dropdown>
+
+      <span v-else style="width:36px"/>
     </div>
-  </transition>
+    <h2 style="color:#adadad" class="subtitle">{{post.author_name}}</h2>
+    <div style="display:flex; flex-wrap: wrap; justify-content:center; align-items: center;">
+      <img
+        class="post-picture"
+        :class="{'voted' : post.user_vote === 0}"
+        :src="post.url_one"
+        @load="OnImgLoad"
+        @click="clickVote(0)"
+      >
+      <img
+        class="post-picture"
+        :class="{'voted' : post.user_vote === 1}"
+        :src="post.url_two"
+        @load="OnImgLoad"
+        @click="clickVote(1)"
+      >
+    </div>
+    <post-votes :post="post"/>
+  </div>
 </template>
 
 <script>
@@ -43,10 +60,13 @@ export default {
     }
   },
   computed: {
-    ...mapState({ theme: state => state.user.theme })
+    ...mapState({
+      theme: state => state.user.theme,
+      user_id: state => state.user.id
+    })
   },
   methods: {
-    ...mapActions({ vote: 'post/Vote' }),
+    ...mapActions({ vote: 'post/Vote', removePost: 'post/removePost' }),
     OnImgLoad() {
       this.loaded += 1
     },
@@ -68,10 +88,7 @@ export default {
   max-width: 1100px;
 }
 .post-picture {
-  /* width: 49%; */
   margin: 10px;
-  /* margin-left: auto; */
-  /* margin-right: auto; */
   max-height: 50%;
   max-width: 48%;
   border-style: solid;
@@ -105,5 +122,9 @@ export default {
   animation-duration: 0.5s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
+}
+
+.dropdown-item {
+  color: black;
 }
 </style>

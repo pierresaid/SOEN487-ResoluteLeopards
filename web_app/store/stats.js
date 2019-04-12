@@ -16,10 +16,10 @@ export const mutations = {
     state.loading = status
   },
   SET_INFO(state, { cats, dogs }) {
-    state.cats = 25
-    // state.cats = cats
-    // state.dogs = dogs
-    state.dogs = 42
+    // state.cats = 25
+    state.cats = cats
+    state.dogs = dogs
+    // state.dogs = 42
   }
 }
 
@@ -35,9 +35,11 @@ export const actions = {
       })
 
       commit('SET_LOADING', false)
+      return null
     } catch (error) {
       ErrorNotification(error)
+      commit('SET_LOADING', false)
+      return error
     }
-    commit('SET_LOADING', false)
   }
 }

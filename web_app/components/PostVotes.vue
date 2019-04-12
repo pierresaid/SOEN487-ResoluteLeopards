@@ -3,9 +3,9 @@
     <delimiter/>
     <div style="display:flex; justify-content: space-around;">
       <div style="display:flex; align-items:center">
-        <transition :duration="100" name="fade" mode="out-in">
+        <transition :duration="100" name="fade-long" mode="out-in">
           <fa
-            v-if="post.user_vote === 0"
+            v-if="post.user_vote == 0"
             key="2"
             class="heart"
             :icon="['fas', 'heart']"
@@ -16,9 +16,9 @@
         <p>{{post.vote_one}} votes</p>
       </div>
       <div style="display:flex; align-items:center">
-        <transition :duration="100" name="fade" mode="out-in">
+        <transition :duration="100" name="fade-long" mode="out-in">
           <fa
-            v-if="post.user_vote === 1"
+            v-if="post.user_vote == 1"
             key="2"
             class="heart"
             :icon="['fas', 'heart']"
@@ -62,12 +62,12 @@ export default {
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
+.fade-long-enter-active,
+.fade-long-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter,
-.fade-leave-to {
+.fade-long-enter,
+.fade-long-leave-to {
   opacity: 0;
 }
 
