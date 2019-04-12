@@ -17,12 +17,21 @@
             style="display: flex; align-items: center; justify-content: center; min-width:600px; min-height:600px"
           >
             <GChart
-              v-show="err === null"
+              v-show="err === null && (cats > 0 || dogs > 0)"
               type="PieChart"
               :data="chartData"
               :options="chartOptions"
               @ready="onChartReady"
             />
+            <div
+              v-if="!loading && cats === 0 && dogs === 0"
+              style="display:flex; align-items:center; flex-direction: column"
+            >
+              <p>No data to show</p>
+              <button class="button is-primary" @click="fetchData">
+                <fa icon="sync" style="margin-right:5"/>Retry
+              </button>
+            </div>
             <p v-if="!loading && err !== null" style="color:hsl(348, 100%, 61%)">{{err}}</p>
           </div>
           <div v-show="!loading" style="display:flex; flex-direction:column; align-items:center">
@@ -83,13 +92,16 @@ export default {
       }
     }
   },
-  async created() {
-    if (this.cats === -1) this.err = await this.getResults()
+  created() {
+    if (this.cats === -1) this.fetchData()
   },
   methods: {
     ...mapActions({ getResults: 'stats/getResults' }),
     onChartReady(chart, google) {
       this.chartReady = true
+    },
+    async fetchData() {
+      this.err = await this.getResults()
     }
   }
 }

@@ -37,7 +37,7 @@
         @click="clickVote(1)"
       >
     </div>
-    <post-votes :post="post"/>
+    <post-votes ref="voteComp" :post="post"/>
   </div>
 </template>
 
@@ -70,11 +70,14 @@ export default {
     OnImgLoad() {
       this.loaded += 1
     },
-    clickVote(idx) {
-      this.vote({
+    async clickVote(idx) {
+      if (this.$refs.voteComp.voting !== -1) return
+      this.$refs.voteComp.setVoting(idx)
+      await this.vote({
         postId: this.post.id,
         value: idx === this.post.user_vote ? -1 : idx
       })
+      this.$refs.voteComp.setVoting(-1)
     }
   }
 }

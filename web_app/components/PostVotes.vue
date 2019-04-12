@@ -1,7 +1,7 @@
 <template>
   <div style="width:90%">
     <delimiter/>
-    <div style="display:flex; justify-content: space-around;">
+    <div style="display:flex; justify-content: space-evenly; align-items: center;">
       <div style="display:flex; align-items:center">
         <transition :duration="100" name="fade-long" mode="out-in">
           <fa
@@ -15,6 +15,13 @@
         </transition>
         <p>{{post.vote_one}} votes</p>
       </div>
+
+      <!-- <spinner :size="30"/> -->
+      <transition name="fade" mode="out-in">
+        <spinner v-if="voting !== -1" :size="30"/>
+        <span v-else style="width:30px"/>
+      </transition>
+
       <div style="display:flex; align-items:center">
         <transition :duration="100" name="fade-long" mode="out-in">
           <fa
@@ -35,10 +42,12 @@
 <script>
 import delimiter from './delimiter'
 import { mapActions } from 'vuex'
+import spinner from '~/components/spinner.vue'
 
 export default {
   components: {
-    delimiter
+    delimiter,
+    spinner
   },
   props: {
     post: {
@@ -47,15 +56,23 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      voting: -1
+    }
   },
   methods: {
     ...mapActions({ vote: 'post/Vote' }),
-    clickVote(idx) {
-      this.vote({
+    async clickVote(idx) {
+      if (this.voting !== -1) return
+      this.voting = idx
+      await this.vote({
         postId: this.post.id,
         value: idx === this.post.user_vote ? -1 : idx
       })
+      this.voting = -1
+    },
+    setVoting(idx) {
+      this.voting = idx
     }
   }
 }

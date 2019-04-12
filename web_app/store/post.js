@@ -3,8 +3,6 @@ import {
   ErrorNotification
 } from '../helpers/Notifications'
 
-import Vue from 'vue'
-
 const BaseUrl = 'http://localhost:5000/'
 
 export const state = () => ({
@@ -41,12 +39,16 @@ export const mutations = {
   SET_UPLOADING(state, uploading) {
     state.uploading = uploading
   },
+  SET_VOTE(state, { postId, value }) {
+    let idx = state.posts.findIndex(p => {
+      return p.id === postId
+    })
+    state.posts[idx].user_vote = value
+  },
   SET_POST(state, post) {
     let idx = state.posts.findIndex(p => {
       return p.id === post.id
     })
-    console.log(post)
-
     state.posts[idx].user_vote = post.user_vote
     state.posts[idx].vote_one = post.vote_one
     state.posts[idx].vote_two = post.vote_two
@@ -113,33 +115,28 @@ export const actions = {
 
   async removePost({ commit }, postId) {
     commit('POP_POST', postId)
-    SuccessNotification('Update successful')
-
-    // commit('SET_UPLOADING', true)
-    // try {
-    //   let response = await this.$axios.post(BaseUrl + 'post', {
-    //     title: post.title,
-    //     url_one: post.url_one,
-    //     url_two: post.url_two,
-    //     user_id: rootState.user.id
-    //   })
-    //   commit('ADD_POST', response.data.post)
-    // SuccessNotification('Upload successful')
-    // } catch (error) {
-    //   ErrorNotification(error)
-    // }
-    // commit('SET_UPLOADING', false)
+    try {
+      await this.$axios.delete(BaseUrl + `post/${postId}`)
+      SuccessNotification('Update successful')
+    } catch (error) {
+      ErrorNotification(error)
+    }
   },
   async Vote({ commit, rootState }, { postId, value }) {
-    // commit('SET_UPLOADING_VOTE', true)
     try {
-      let response = await this.$axios.post(BaseUrl + 'vote/', {
-        post_id: postId,
-        user_id: rootState.user.id,
-        value: value
-      })
+      commit('SET_VOTE', { postId, value })
+      let response = await this.$axios.post(
+        BaseUrl + 'vote/',
+        {
+          post_id: postId,
+          user_id: rootState.user.id,
+          value: value
+        },
+        { progress: false }
+      )
 
       response = await this.$axios.get(BaseUrl + `post/${postId}`, {
+        progress: false,
         params: {
           user_id: rootState.user.id
         }
@@ -148,7 +145,5 @@ export const actions = {
     } catch (error) {
       ErrorNotification(error)
     }
-
-    // commit('SET_UPLOADING_VOTE', false)
   }
 }
