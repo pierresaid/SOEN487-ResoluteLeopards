@@ -70,7 +70,7 @@ def delete_post_by_post_id(post_id):
 
 @post_blueprint.route('/post', methods={'POST'})
 def put_new_post():
-    data = request.values
+    data = request.get_json()
 
     try:
         params = {
