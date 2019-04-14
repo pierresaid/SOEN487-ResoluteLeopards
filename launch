@@ -3,6 +3,7 @@
 cd ./user_api
 ./launch&
 cd ..
+sleep 10
 
 cd ./post_api
 ./launch&

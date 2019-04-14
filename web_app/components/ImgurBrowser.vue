@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="control button imgur-button" @click="isModalActive = true">Or rowse Imgur</button>
+    <button class="control button imgur-button" @click="isModalActive = true">Or browse Imgur</button>
     <b-modal :active.sync="isModalActive" scroll="keep">
       <image-browser
         :images="images"
