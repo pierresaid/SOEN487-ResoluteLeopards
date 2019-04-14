@@ -44,8 +44,9 @@ def login_required(f):
             return "No authorization header", 400
 
         # Get token from HTTP Authorization Header
-        [type, token] = authorization.split(" ")
-        if not (type or token):
+        # [type, token] = authorization.split(" ")
+        token = authorization
+        if not (token):
             return "Incorrect authorization header", 400
 
         try:

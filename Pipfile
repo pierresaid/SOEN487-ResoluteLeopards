@@ -6,11 +6,6 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-requests = "*"
-flask = "*"
-Flask-Cors = "*"
-jwcrypto = "==0.6.0"
-pytz = "==2018.9"
 
 [requires]
-python_version = "3.6"
+python_version = "2.7"
