@@ -51,7 +51,7 @@
               <fa icon="dog"/>
             </span>
             <span :style="`font-size : ${isMobileDevice ? 46 : 96}px;`">
-              <fa class="heart" :icon="[cats >= dogs ? 'fas' : 'far', 'heart']"/>
+              <fa class="heart" :icon="[cats <= dogs ? 'fas' : 'far', 'heart']"/>
             </span>
           </div>
         </div>
