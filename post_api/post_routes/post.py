@@ -65,7 +65,7 @@ def get_post_by_id(post_id: int):
         return make_response(jsonify({'code': 404, 'msg': 'Cannot find this post.'}), 404)
 
 @post_blueprint.route('/post/<post_id>', methods={'DELETE'})
-# @login_required
+@login_required
 def delete_post_by_post_id(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if post:
