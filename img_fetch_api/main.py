@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, make_response
 import requests
 from flask_cors import CORS
+from common.auth import setup_auth, login_required
 
 app = Flask(__name__)
 CORS(app)
+# setup_auth('http://localhost:5001')
 
 catApiUrl = "https://api.thecatapi.com/v1/images/search"
 dogApiUrl = "https://random.dog/woof.json"
@@ -22,6 +24,7 @@ def isValidImage(url):
 
 
 @app.route('/cat')
+# @login_required
 def getRandomCat():
     try:
         while True:
@@ -35,6 +38,7 @@ def getRandomCat():
 
 
 @app.route('/dog')
+# @login_required
 def getRandomDog():
     try:
         while True:
@@ -49,6 +53,7 @@ def getRandomDog():
 
 @app.route('/imgur/cat/<int:page>', defaults={'page': 0})
 @app.route('/imgur/cat/<int:page>')
+@login_required
 def getRandomCatFromImgur(page):
     try:
         response = requests.get(catImgurUrl + '/' + str(page),
@@ -66,6 +71,7 @@ def getRandomCatFromImgur(page):
 
 @app.route('/imgur/dog/<int:page>', defaults={'page': 0})
 @app.route('/imgur/dog/<int:page>')
+@login_required
 def getRandomDogFromImgur(page):
     try:
         response = requests.get(dogImgurUrl + '/' + str(page),

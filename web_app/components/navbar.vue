@@ -38,13 +38,15 @@
         </div>
 
         <div style="margin-right:30px" class="navbar-end">
-          <div v-if="isLogged" class="navbar-item">
+          <div v-if="isLogged" class="navbar-item is-hidden-touch">
             <nuxt-link to="/NewPost">
               <button class="button is-primary is-info">
                 <fa icon="plus" class="fa-lg"/>
               </button>
             </nuxt-link>
           </div>
+
+          <nuxt-link v-if="isLogged" to="/NewPost" class="navbar-item is-hidden-desktop">Create Post</nuxt-link>
 
           <div class="navbar-item">
             <night-mode/>

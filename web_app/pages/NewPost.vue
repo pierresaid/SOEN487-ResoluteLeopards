@@ -2,12 +2,16 @@
   <no-ssr>
     <div style="margin-top:50px; display: flex; flex-direction:column; align-items: center;">
       <h1 class="title">Create a post</h1>
-      <box style="width:80%; max-width:800px;">
+      <box style="width:80%; max-width:900px;">
         <b-field label="Title" :class="theme">
           <b-input v-model="title" placeholder="Title"/>
         </b-field>
         <p class="label">You Dog Picture</p>
-        <b-field style="margin-bottom:10px;display:flex" :type="{'is-danger' : img_one_err}">
+        <b-field
+          style="margin-bottom:10px;display:flex;justify-content: center;"
+          :style="`flex-wrap : ${isMobileDevice ? 'wrap' : 'no-wrap'}`"
+          :type="{'is-danger' : img_one_err}"
+        >
           <c-input
             v-model="url_one"
             placeholder="Dog Picture Url"
@@ -65,7 +69,11 @@
           </span>
         </div>
         <p class="label">You Cat Picture</p>
-        <b-field style="margin-bottom:10px;display:flex" :type="{'is-danger' : img_two_err}">
+        <b-field
+          style="margin-bottom:10px;display:flex; justify-content: center;"
+          :type="{'is-danger' : img_two_err}"
+          :style="`flex-wrap : ${isMobileDevice ? 'wrap' : 'no-wrap'}`"
+        >
           <c-input
             v-model="url_two"
             placeholder="Cat Picture Url"
@@ -154,6 +162,7 @@ import onTop from '~/components/onTop'
 import predictUrl from '~/services/prediction'
 import { ErrorNotification } from '../helpers/Notifications'
 import spinner from '~/components/spinner.vue'
+import { isMobile } from 'mobile-device-detect'
 
 import 'animate.css'
 import ImgurBrowser from '../components/ImgurBrowser.vue'
@@ -210,6 +219,9 @@ export default {
         this.img_two_prediction !== null &&
         this.img_two_prediction.label.indexOf('dog') !== -1
       )
+    },
+    isMobileDevice() {
+      return isMobile
     },
     FormHasError() {
       return (

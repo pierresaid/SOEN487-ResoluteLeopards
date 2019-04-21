@@ -2,13 +2,13 @@
   <half-circle-spinner
     v-if="!background"
     :animation-duration="1000"
-    :size="60"
+    :size="size"
     :color="theme === 'dark' ? 'white' : 'black'"
   />
   <div v-else class="circle-background" :class="theme">
     <half-circle-spinner
       :animation-duration="1000"
-      :size="60"
+      :size="size"
       :color="theme === 'dark' ? 'white' : 'black'"
     />
   </div>
@@ -27,6 +27,10 @@ export default {
     background: {
       type: Boolean,
       default: false
+    },
+    size: {
+      type: Number,
+      default: 60
     }
   },
   computed: {

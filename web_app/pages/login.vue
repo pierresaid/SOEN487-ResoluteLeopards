@@ -2,7 +2,7 @@
   <no-ssr>
     <div style="margin-top:50px; display: flex; flex-direction:column; align-items: center;">
       <h1 class="title">Login</h1>
-      <box style="width:50%; max-width:648px;">
+      <box style="width:90%; max-width:600px;">
         <b-field label="Email" :class="theme">
           <c-input v-model="email" type="email" placeholder="Email" icon="envelope"/>
         </b-field>
