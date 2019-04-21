@@ -1,10 +1,12 @@
 from flask import request, jsonify, g
 from functools import wraps
-from helpers.user import hash_password
+from argon2 import PasswordHasher
+
+ph = PasswordHasher()
 
 
-def filter_empty(d: dict):
-    return {k: v for k, v in d.items() if v is not None}
+def hash_password(password: str):
+    return ph.hash(password)
 
 
 def get_data():

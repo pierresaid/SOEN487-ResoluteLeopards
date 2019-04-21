@@ -5,24 +5,8 @@ import pytz
 from models import RefreshToken, db
 from exceptions import ApiError
 from uuid import uuid4
-from main import key
-
-
-def jwt_base_claims(ttl: timedelta):
-    now = datetime.now(tz=pytz.utc)
-    return {
-        "iss": "ResoluteLeopards",
-        "exp": int((now + ttl).timestamp()),
-        "iat": int(now.timestamp()),
-        "ttl": ttl.total_seconds(),
-    }
-
-
-def jwt_claims(ttl: timedelta, **claims):
-    return {
-        **jwt_base_claims(ttl),
-        **claims,
-    }
+from keys import get_signing_key
+from helpers.jwt_claims import jwt_claims
 
 
 def refresh_token(user):
@@ -56,7 +40,7 @@ def create_tokens_for_user(user):
         at_payload = access_token(rt)
         print("Access Token Payload: ", at_payload)
         token = jwt.JWT(header={"alg": "RS256", "typ": "JWT"}, claims=at_payload)
-        token.make_signed_token(key)
+        token.make_signed_token(get_signing_key())
         return {
             "refresh_token": rt.jti,
             "access_token": token.serialize()
@@ -81,5 +65,5 @@ def get_fresh_token(rt: str):
         raise ApiError(401, "Invalid refresh token.")
 
     token = jwt.JWT(header={"alg": "RS256", "typ": "JWT"}, claims=access_token(db_token))
-    token.make_signed_token(key)
+    token.make_signed_token(get_signing_key())
     return token.serialize()
