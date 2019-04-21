@@ -31,4 +31,4 @@ Werkzeug = "==0.14.1"
 Flask-Cors = "*"
 
 [requires]
-python_version = "3.*"
+python_version = "3.6"

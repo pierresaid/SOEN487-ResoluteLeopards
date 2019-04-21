@@ -3,9 +3,10 @@ import requests
 from flask_cors import CORS
 from common.auth import setup_auth, login_required
 
+setup_auth('http://localhost:5001')
+
 app = Flask(__name__)
 CORS(app)
-setup_auth('http://localhost:5001')
 
 catApiUrl = "https://api.thecatapi.com/v1/images/search"
 dogApiUrl = "https://random.dog/woof.json"

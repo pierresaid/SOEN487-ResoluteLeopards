@@ -31,7 +31,7 @@ export const mutations = {
   },
   SET_TOKENS(state, { access_token, refresh_token, id }) {
     this.$axios.defaults.headers.common = {
-      Authorization: access_token
+      Authorization: `Bearer ${access_token}`
     }
     state.access_token = access_token
     state.refresh_token = refresh_token

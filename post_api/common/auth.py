@@ -1,9 +1,34 @@
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util import Retry
 from functools import wraps
 from flask import g, request, jsonify
 from jwcrypto import jwk, jwt, jws
 from jwcrypto.common import json_decode
+from datetime import datetime
 from common.exceptions import ApiError, TokenVerificationException
+
+
+Retry.BACKOFF_MAX = 5
+
+
+def requests_retry_session(
+    retries=100,
+    backoff_factor=0.1,
+    session=None,
+):
+    session = session or requests.Session()
+    retry = Retry(
+        total=retries,
+        read=retries,
+        connect=retries,
+        backoff_factor=backoff_factor,
+        status_forcelist=(500,)
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+    return session
 
 
 def setup_auth(auth_api_url: str):
@@ -14,14 +39,20 @@ def setup_auth(auth_api_url: str):
 
     Obtains the public keys of the Authorization service in order to verify JWT tokens.
     """
-    r = requests.get(auth_api_url + "/jwt/key")
-    if r.status_code == 200 and r.headers['content-type'] == 'application/json':
-        global public_keys
-        public_keys = jwk.JWKSet.from_json(r.content)
-        print("[Auth] Using Public Keys: ", public_keys.export())
+    t0 = datetime.now()
+    print(f"Trying to obtaining public keys from '{auth_api_url}', waiting...")
+    try:
+        r = requests_retry_session().get(auth_api_url + "/jwt/key")
+    except Exception:
+        raise Exception(f"Failed to obtain public keys after trying for {(datetime.now() - t0).total_seconds()}s")
     else:
-        print("request failed status: ", r.status_code, r.headers['content-type'])
-    pass
+        if r.status_code == 200 and r.headers['content-type'] == 'application/json':
+            global public_keys
+            public_keys = jwk.JWKSet.from_json(r.content)
+            print("[Auth] Using Public Keys: ", public_keys.export())
+        else:
+            raise Exception(f"Failed to obtain public keys status: {r.status_code}")
+        pass
 
 
 def key_set_verify(token, key_set):
