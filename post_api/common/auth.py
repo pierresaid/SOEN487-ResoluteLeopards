@@ -1,20 +1,9 @@
 import requests
 from functools import wraps
-from flask import g, request, redirect, url_for
+from flask import g, request, jsonify
 from jwcrypto import jwk, jwt, jws
 from jwcrypto.common import json_decode
-from datetime import datetime
-import pytz
-
-token_blacklist = set()
-
-
-def get_token_blacklist():
-    pass
-
-
-def init_token_blacklist():
-    pass
+from common.exceptions import ApiError, TokenVerificationException
 
 
 def setup_auth(auth_api_url: str):
@@ -35,38 +24,50 @@ def setup_auth(auth_api_url: str):
     pass
 
 
+def key_set_verify(token, key_set):
+    for key in key_set.__iter__():
+        try:
+            token.verify(key)
+            return key
+        except jws.InvalidJWSSignature:
+            pass
+    raise TokenVerificationException("Unable to verify signature")
+
+
 def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        # Get authorization header
-        authorization = request.headers.get("Authorization")
-        if not authorization:
-            return "No authorization header", 400
-
-        # Get token from HTTP Authorization Header
-        [type, token] = authorization.split(" ")
-        if not (type or token):
-            return "Incorrect authorization header", 400
-
         try:
-            # Obtain / verify token
-            tok: jws.JWS = jwt.JWT(jwt=token).token
-            tok.verify(public_keys)
-            payload = json_decode(tok.payload)
+            # Get authorization header
+            authorization = request.headers.get("Authorization")
+            if not authorization:
+                raise ApiError(400, "No authorization header")
 
-            # Check if the token is expired
-            exp = datetime.utcfromtimestamp(payload['exp']).replace(tzinfo=pytz.utc)
-            if exp < datetime.now(tz=pytz.utc):
-                return f"Token expired {abs(int((exp - datetime.now(tz=pytz.utc)).total_seconds()))} seconds ago", 401
+            # Get token from HTTP Authorization Header
+            [type, token] = authorization.split(" ")
+            if not (type or token):
+                raise ApiError(400, "Incorrect authorization header")
 
-            # Set the user id
-            g.user_id = payload['user_id']
+            try:
+                # Obtain / verify token
+                tok: jws.JWS = jwt.JWT(jwt=token).token
+                key_set_verify(tok, public_keys)
+                payload = json_decode(tok.payload)
 
-            # Pass on the request
-            return f(*args, **kwargs)
-        except jws.InvalidJWSSignature:
-            return "Unable to verify signature", 401
-        except:
-            return "Invalid token", 401
+                # Set the user id
+                if 'user_id' not in payload:
+                    raise ApiError(400, "No user_id contained in the token")
+                g.user_id = payload['user_id']
+
+                # Pass on the request
+                return f(*args, **kwargs)
+            except TokenVerificationException:
+                raise ApiError(401, "Unable to verify signature")
+            except jwt.JWTExpired:
+                raise ApiError(401, "Token has expired")
+            except jwt.JWException:
+                raise ApiError(401, "Invalid token")
+        except ApiError as e:
+            return jsonify({"code": e.code, "msg": e.msg}), e.code
 
     return wrapper

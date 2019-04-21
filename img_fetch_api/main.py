@@ -5,7 +5,7 @@ from common.auth import setup_auth, login_required
 
 app = Flask(__name__)
 CORS(app)
-# setup_auth('http://localhost:5001')
+setup_auth('http://localhost:5001')
 
 catApiUrl = "https://api.thecatapi.com/v1/images/search"
 dogApiUrl = "https://random.dog/woof.json"
@@ -24,7 +24,7 @@ def isValidImage(url):
 
 
 @app.route('/cat')
-# @login_required
+@login_required
 def getRandomCat():
     try:
         while True:
@@ -38,7 +38,7 @@ def getRandomCat():
 
 
 @app.route('/dog')
-# @login_required
+@login_required
 def getRandomDog():
     try:
         while True:

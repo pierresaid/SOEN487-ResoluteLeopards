@@ -4,7 +4,7 @@ from config import DevConfig
 from flask_cors import CORS
 from common.auth import setup_auth
 
-# setup_auth('http://localhost:5001')
+setup_auth('http://localhost:5001')
 app = Flask(__name__)
 CORS(app)
 # CORS(app, resources={r"/*/*": {"origins": "*"}})
