@@ -42,11 +42,12 @@ def convert_value_or_none(value) -> int or None:
 def add_votes_to_post_json_list(post_list: list, user_id: int):
     for post in post_list:
         vote = Vote.query.filter_by(post_id=post['id'], user_id=user_id)
+        all_vote = Vote.query.filter_by(post_id=post['id'])
         if user_id:
             user_vote = [x for x in vote if x.user_id == user_id]
             post['user_vote'] = int(-1 if not user_vote else user_vote[0].value)
-        post['vote_one'] = int(sum(v.value == 0 for v in vote))
-        post['vote_two'] = int(sum(v.value == 1 for v in vote))
+        post['vote_one'] = int(sum(v.value == 0 for v in all_vote))
+        post['vote_two'] = int(sum(v.value == 1 for v in all_vote))
 
 
 @post_blueprint.route('/post/<post_id>', methods={'GET'})
