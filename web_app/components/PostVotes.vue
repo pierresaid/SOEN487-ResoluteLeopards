@@ -41,7 +41,7 @@
 
 <script>
 import delimiter from './delimiter'
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import spinner from '~/components/spinner.vue'
 
 export default {
@@ -60,10 +60,20 @@ export default {
       voting: -1
     }
   },
+  computed: {
+    ...mapState({
+      isLogged: state => state.user.isLogged
+    })
+  },
   methods: {
     ...mapActions({ vote: 'post/Vote' }),
     async clickVote(idx) {
       if (this.voting !== -1) return
+      if (!this.isLogged) {
+        this.launchLoginNotif()
+        return
+      }
+
       this.voting = idx
       await this.vote({
         postId: this.post.id,
@@ -73,6 +83,19 @@ export default {
     },
     setVoting(idx) {
       this.voting = idx
+    },
+    launchLoginNotif() {
+      this.$snackbar.open({
+        message: 'You must be logged to vote',
+        type: 'is-info',
+        position: 'is-bottom-right',
+        actionText: 'Register',
+        onAction: () => {
+          this.$nuxt.$router.push({
+            path: '/register'
+          })
+        }
+      })
     }
   }
 }

@@ -62,7 +62,8 @@ export default {
   computed: {
     ...mapState({
       theme: state => state.user.theme,
-      user_id: state => state.user.id
+      user_id: state => state.user.id,
+      isLogged: state => state.user.isLogged
     })
   },
   methods: {
@@ -72,12 +73,29 @@ export default {
     },
     async clickVote(idx) {
       if (this.$refs.voteComp.voting !== -1) return
+      if (!this.isLogged) {
+        this.launchLoginNotif()
+        return
+      }
       this.$refs.voteComp.setVoting(idx)
       await this.vote({
         postId: this.post.id,
         value: idx === this.post.user_vote ? -1 : idx
       })
       this.$refs.voteComp.setVoting(-1)
+    },
+    launchLoginNotif() {
+      this.$snackbar.open({
+        message: 'You must be logged to vote',
+        type: 'is-info',
+        position: 'is-bottom-right',
+        actionText: 'Register',
+        onAction: () => {
+          this.$nuxt.$router.push({
+            path: '/register'
+          })
+        }
+      })
     }
   }
 }
