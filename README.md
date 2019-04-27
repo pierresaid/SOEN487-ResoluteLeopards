@@ -25,6 +25,7 @@ Requirements:
 - ``IMAGE FETCHING API``: Retrieves the cutest dog and cat pictures of the web.
 Requirements:
     - Abstraction of foreign APIs that return random pictures of cats and dogs. Provides 2 methods: GetCatPicture and GetDogPicture.
+    - Interact with the imgur API to fetch images of dogs and cats
 - ``FACE-OFF API``: Interacts with the image fetching service to build a duel between a dog and a cat. Then, creates a post that will pop up in the users' feeds. It handles the votes and sends them to the DB service.
 Requirements:
     - Retrieve posts by date (order by)
@@ -32,6 +33,7 @@ Requirements:
     - Generate a match opposing a cat and a dog, with the initialization of a counter.
     - Store the post in DB
     - Send votes as long as the post is active.
+- ``MACHINE LEARNING API``: Get an image as an input and predict if it is a cat or a dog. This is done with Tensorflow with a model trained to differentiate dogs from cats
 - ``ANALYTICS API``: Computes the global score for dogs and cats from the votes. It keeps the dedicated page updated with the answer to the big question: "Who's cuter between cats and dogs ?"
 Requirements:
     - Compute the votes and compile various statistics.
@@ -66,9 +68,9 @@ To kill all processes :
 ## Tasks
 
 #### Pierre Saïd 
-- task 1
-- task 2
-- etc
+- ML API
+- Front end
+- Imgur Image fetching
 
 #### Guillaume Hitier
 - task 1
