@@ -46,6 +46,8 @@ The APIS are used by the front-end of our application, which is developed using 
 
 ## Installation
 
+To authenticate yourself when using the microservices you'll have to generate keys. Execute `./generate-keys.sh` in the `user_api/keys/` folder.
+
 ## Execution
 Launch all API's and web ap with : 
 ``` bash
@@ -71,20 +73,18 @@ To kill all processes :
 - ML API
 - Front end
 - Imgur Image fetching
+- Bug fixes
 
 #### Guillaume Hitier
-- task 1
-- task 2
-- etc
+- User API
+- Bug fixes
 
 #### Clément Peau
-- task 1
-- task 2
-- etc
+- Post API
+- Bug fixes
 
 #### Theo Penavaire 
 - Image Fetching API development
-- task 2
-- etc
+- Analytics API development
+- Bug fixes
 
-## Misc.
