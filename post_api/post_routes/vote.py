@@ -48,7 +48,6 @@ def get_vote_for_user(user_id):
 
 # region PUT/POST
 
-# TODO: Revove userId when we'll have the token
 @vote_blueprint.route("/<post_id>/<user_id>", methods={'PUT'})
 def update_vote(post_id, user_id):
     vote = Vote.query.filter_by(post_id=post_id, user_id=user_id).first()
@@ -69,9 +68,8 @@ def update_vote(post_id, user_id):
 
 
 @vote_blueprint.route("/", methods={'POST'})
-# @login_required
+@login_required
 def add_or_modify_vote():
-    # TODO: Fix login required method
     try:
         data = request.get_json()
         param = {
@@ -104,7 +102,7 @@ def add_or_modify_vote():
 # region DELETE
 
 @vote_blueprint.route("/<post_id>/<user_id>", methods=['DELETE'])
-# @login_required
+@login_required
 def delete_vote(post_id, user_id):
     vote = Vote.query.filter_by(post_id=post_id, user_id=user_id).first()
     if vote:
