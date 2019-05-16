@@ -3,7 +3,7 @@ import {
   ErrorNotification
 } from '../helpers/Notifications'
 
-const BaseUrl = 'http://localhost:5000/'
+const BaseUrl = 'http://34.74.88.32:5000/'
 
 export const state = () => ({
   posts: [],

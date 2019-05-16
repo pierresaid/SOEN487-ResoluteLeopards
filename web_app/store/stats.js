@@ -3,7 +3,7 @@ import {
   ErrorNotification
 } from '../helpers/Notifications'
 
-const BaseUrl = 'http://localhost:5004/'
+const BaseUrl = 'http://34.74.88.32:5004/'
 
 export const state = () => ({
   cats: -1,

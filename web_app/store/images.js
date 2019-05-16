@@ -1,6 +1,6 @@
 import { ErrorNotification } from '../helpers/Notifications'
 
-const BaseUrl = 'http://localhost:5003/'
+const BaseUrl = 'http://34.74.88.32:5003/'
 
 export const state = () => ({
   dogs_urls: [],

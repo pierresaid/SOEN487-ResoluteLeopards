@@ -3,7 +3,7 @@ import {
   ErrorNotification
 } from '../helpers/Notifications'
 
-const BaseUrl = 'http://localhost:5001/'
+const BaseUrl = 'http://34.74.88.32:5001/'
 
 export const state = () => ({
   isLogged: false,
