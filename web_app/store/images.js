@@ -1,6 +1,6 @@
 import { ErrorNotification } from '../helpers/Notifications'
 
-const BaseUrl = 'http://34.74.88.32:5003/'
+const BaseUrl = 'https://img-fetch.api.cat-vs-dog.said.tech/'
 
 export const state = () => ({
   dogs_urls: [],

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BaseUrl = 'http://34.74.88.32:5002/'
+const BaseUrl = 'https://ml.api.cat-vs-dog.said.tech/'
 
 export default async function predictUrl(url) {
   try {

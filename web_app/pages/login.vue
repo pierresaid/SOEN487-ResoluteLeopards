@@ -4,11 +4,11 @@
       <h1 class="title">Login</h1>
       <box style="width:90%; max-width:600px;">
         <b-field label="Email" :class="theme">
-          <c-input v-model="email" type="email" placeholder="Email" icon="envelope"/>
+          <c-input v-model="email" type="email" placeholder="Email" icon="envelope" />
         </b-field>
 
         <b-field label="Password" style="width:100%;" :class="theme">
-          <c-input v-model="password" type="password" placeholder="Password" icon="lock"/>
+          <c-input v-model="password" type="password" placeholder="Password" icon="lock" />
         </b-field>
 
         <button
