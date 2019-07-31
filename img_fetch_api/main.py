@@ -6,7 +6,8 @@ from common.auth import setup_auth, login_required
 setup_auth('http://localhost:5001')
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 catApiUrl = "https://api.thecatapi.com/v1/images/search"
 dogApiUrl = "https://random.dog/woof.json"

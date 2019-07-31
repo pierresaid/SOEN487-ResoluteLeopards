@@ -7,8 +7,9 @@ from common.auth import setup_auth
 setup_auth('http://localhost:5001')
 
 app = Flask(__name__)
-CORS(app)
-# CORS(app, resources={r"/*/*": {"origins": "*"}})
+#CORS(app)
+#CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"*": {"origins": "*"}})
 
 db = SQLAlchemy(app)
 
@@ -35,4 +36,4 @@ def not_found_route(e):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5000)

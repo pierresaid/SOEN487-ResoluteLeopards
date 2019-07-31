@@ -3,7 +3,8 @@ import requests
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 post_api_url = "http://localhost:5000/"
 

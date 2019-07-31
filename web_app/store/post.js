@@ -10,7 +10,7 @@ export const state = () => ({
   fetchingPosts: false,
   uploading: false,
   page: 0,
-  post_per_page: 10,
+  post_per_page: 5,
   end: false
 })
 
